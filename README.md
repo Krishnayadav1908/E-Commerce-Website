@@ -12,3 +12,8 @@ A modern ecommerce web application built using React and Vite.
 
 npm install  
 npm run dev
+
+## Features
+
+- Application layout
+- Navigation bar
