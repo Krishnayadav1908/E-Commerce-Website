@@ -17,3 +17,5 @@ npm run dev
 
 - Application layout
 - Navigation bar
+- Routing with React Router
+- Home and Not Found pages
