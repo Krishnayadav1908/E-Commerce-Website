@@ -19,3 +19,4 @@ npm run dev
 - Navigation bar
 - Routing with React Router
 - Home and Not Found pages
+- Product listing from REST API
