@@ -20,3 +20,5 @@ npm run dev
 - Routing with React Router
 - Home and Not Found pages
 - Product listing from REST API
+- Product detail view
+- Add to cart functionality
