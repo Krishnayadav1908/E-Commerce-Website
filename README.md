@@ -22,3 +22,6 @@ npm run dev
 - Product listing from REST API
 - Product detail view
 - Add to cart functionality
+- User authentication
+- Protected routes
+- Order pages
