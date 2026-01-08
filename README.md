@@ -25,3 +25,4 @@ npm run dev
 - User authentication
 - Protected routes
 - Order pages
+- Product search functionality

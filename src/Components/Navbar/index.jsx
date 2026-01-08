@@ -38,7 +38,7 @@ const Navbar = () => {
                         )}
                     </button>
                     <NavLink to='/' className='font-bold text-2xl'>
-                        Shopi
+                        KrishCart
                     </NavLink>
                     {/* Desktop navigation categories */}
                     <ul className='hidden md:flex items-center gap-3 ml-4'>
