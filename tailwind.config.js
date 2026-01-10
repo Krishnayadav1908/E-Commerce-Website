@@ -4,9 +4,19 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  theme: {
-    extend: {},
+ theme: {
+  extend: {
+    colors: {
+      primary: "#1F2937", // dark
+      secondary: "#4B5563", 
+      accent: "#6366F1", 
+      bg: "#F9FAFB"
+    },
+    fontFamily: {
+      sans: ["Inter", "sans-serif"],
+    },
   },
+},
   plugins: [],
 }
 
