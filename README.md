@@ -1,28 +1,56 @@
-# React Ecommerce App
+## 🛒 KrishCart
 
-A modern ecommerce web application built using React and Vite.
+KrishCart is a modern frontend-focused e-commerce web application built using React and Vite.
+The project demonstrates core e-commerce flows such as product browsing, cart management, orders, and authentication using client-side state management.
 
-## Tech Stack
+This project was built with a focus on clean UI, reusable components, and practical React architecture.
 
-- React
-- Vite
-- JavaScript
+## 🚀 Features (Currently Implemented)
 
-## Setup
+    •	Product listing and product detail view
+    •	Add to cart & remove from cart functionality
+    •	Cart summary and checkout side menu
+    •	Order placement (UI-level flow)
+    •	Orders history page
+    •	User authentication flow (Sign In / Sign Up)
+    •	Protected routes for authenticated users
+    •	Global state management using Context API
+    •	Responsive UI built with Tailwind CSS
 
-npm install  
-npm run dev
+## 🧑‍💻 Tech Stack
 
-## Features
+Frontend
+• React.js
+• Vite
+• JavaScript (ES6+)
+• HTML5
+• Tailwind CSS
 
-- Application layout
-- Navigation bar
-- Routing with React Router
-- Home and Not Found pages
-- Product listing from REST API
-- Product detail view
-- Add to cart functionality
-- User authentication
-- Protected routes
-- Order pages
-- Product search functionality
+State Management
+• React Context API
+
+Tooling
+• npm
+• Git & GitHub
+• ESLint
+
+## 🔐 Authentication Approach
+
+Authentication in this project is handled on the frontend level using:
+• React Context API
+• Browser localStorage
+
+## ⚙️ Getting Started
+
+1. Install dependencies
+   npm install
+
+2. Run the development server
+   npm run dev
+
+## 📌 Project Scope & Notes
+
+• This is a frontend-focused project
+• No real backend or database is connected
+• APIs are simulated using local state logic
+• The project is actively evolving with planned UI and feature enhancements
