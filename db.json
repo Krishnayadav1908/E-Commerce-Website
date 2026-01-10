@@ -1,0 +1,60 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "title": "Men T-Shirt",
+      "price": 599,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab"
+    },
+    {
+      "id": 2,
+      "title": "Women Jacket",
+      "price": 2499,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1520975922071-a8e2b25f16ab"
+    },
+    {
+      "id": 3,
+      "title": "Smart Watch",
+      "price": 1999,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+    },
+    {
+      "id": 4,
+      "title": "Wireless Headphones",
+      "price": 1499,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+    },
+    {
+      "id": 5,
+      "title": "Sofa Set",
+      "price": 19999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7"
+    },
+    {
+      "id": 6,
+      "title": "Wooden Chair",
+      "price": 4999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1567016549638-2a1f1c4f8f2b"
+    },
+    {
+      "id": 7,
+      "title": "Kids Toy Car",
+      "price": 799,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1601758125946-6ec2ef64daf8"
+    },
+    {
+      "id": 8,
+      "title": "Lego Blocks",
+      "price": 1299,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1587654780291-39c9404d746b"
+    }
+  ]
+}

@@ -1,8 +1,10 @@
 import { createContext, useState, useEffect, useMemo } from 'react'
+import api from '../services/api'
 
 export const ShoppingCartContext = createContext()
 
 export const ShoppingCartProvider = ({children}) => {
+
     // Cart State
     const [count, setCount] = useState(0)
     const [cartProducts, setCartProducts] = useState([])
@@ -108,21 +110,20 @@ export const ShoppingCartProvider = ({children}) => {
         closeCheckoutSideMenu()
     }
 
-    // Fetch products
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await fetch('https://api.escuelajs.co/api/v1/products')
-                const data = await response.json()
-                setItems(data)
-            } catch (error) {
-                console.error('Error fetching products:', error)
-                setItems([])
-            }
+ // Fetch products using Axios + JSON Server
+useEffect(() => {
+    const fetchProducts = async () => {
+        try {
+            const response = await api.get('/products')
+            setItems(response.data)
+        } catch (error) {
+            console.error('Error fetching products:', error)
+            setItems([])
         }
+    }
 
-        fetchProducts()
-    }, [])
+    fetchProducts()
+}, [])
 
     // Memoized filter functions
     const filteredItemsByTitle = useMemo(() => {
@@ -135,7 +136,7 @@ export const ShoppingCartProvider = ({children}) => {
     const filteredItemsByCategory = useMemo(() => {
         if (!searchByCategory || !items) return filteredItemsByTitle
         return filteredItemsByTitle?.filter(item => 
-            item.category.name.toLowerCase().includes(searchByCategory.toLowerCase())
+            item.category.toLowerCase().includes(searchByCategory.toLowerCase())
         )
     }, [filteredItemsByTitle, searchByCategory])
 

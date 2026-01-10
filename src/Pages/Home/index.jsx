@@ -39,6 +39,7 @@ function Home() {
     )
   }
 
+  console.log('ITEMS:', context.items)
   return (
     <Layout>
       {/* HERO BANNER */}

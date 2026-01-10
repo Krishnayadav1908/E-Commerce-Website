@@ -26,14 +26,17 @@ const Card = ({ data }) => {
       {/* Image */}
       <figure className="relative h-56 w-full overflow-hidden rounded-t-2xl">
         <span className="absolute bottom-3 left-3 bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs font-medium">
-          {data.category?.name}
-        </span>
+  {data.category}
+</span>
 
-        <img
-          className="h-full w-full object-cover group-hover:scale-110 transition duration-500"
-          src={data.images?.[0]}
-          alt={data.title}
-        />
+      <img
+        src={data.image}
+        alt={data.title}
+        onError={(e) => {
+        e.target.src = 'https://via.placeholder.com/300x300?text=No+Image'
+        }}
+        className="w-full h-56 object-cover"
+      />
 
         <button
           className="absolute top-3 right-3 flex items-center justify-center w-9 h-9 rounded-full bg-black text-white hover:scale-110 transition"

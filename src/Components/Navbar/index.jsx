@@ -1,18 +1,18 @@
 import { useContext, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { ShoppingCartIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid'
+import { ShoppingCartIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid' // Heroicons imports
 import { ShoppingCartContext } from '../../Context'
 
 const Navbar = () => {
     const context = useContext(ShoppingCartContext)
     const navigate = useNavigate()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const activeStyle = 'underline underline-offset-4'
+    const activeStyle = 'underline underline-offset-4 text-emerald-400 '
 
     // Handle sign out action
     const handleSignOut = (e) => {
         e.preventDefault()
-        context.handleSignOut()
+        context.handleSignOut() // Call context sign out method
         navigate('/sign-in')
         setIsMenuOpen(false)
     }
@@ -75,7 +75,7 @@ const Navbar = () => {
                         <li>
                             <NavLink
                                 to='/furnitures'
-                                onClick={() => context.setSearchByCategory('furnitures')}
+                                onClick={() => context.setSearchByCategory('furniture')}
                                 className={({ isActive }) =>
                                     isActive ? activeStyle : undefined
                                 }>
@@ -85,7 +85,7 @@ const Navbar = () => {
                         <li>
                             <NavLink
                                 to='/toys'
-                                onClick={() => context.setSearchByCategory('toys')}
+                                onClick={() => context.setSearchByCategory('toy')}
                                 className={({ isActive }) =>
                                     isActive ? activeStyle : undefined
                                 }>
@@ -165,7 +165,7 @@ const Navbar = () => {
                         className='flex items-center cursor-pointer'
                         onClick={() => context.openCheckoutSideMenu()}>
                         <ShoppingCartIcon className='h-6 w-6 text-black hover:text-gray-700' />
-                        <div className='flex justify-center items-center bg-black text-white rounded-full w-5 h-5 text-xs'>
+                        <div className='flex justify-center items-center bg-black text-white rounded-full w-5 h-5 text-xs '>
                             {context.cartProducts.length}
                         </div>
                     </button>
@@ -177,7 +177,7 @@ const Navbar = () => {
                 <div className='fixed inset-0 bg-white z-50 md:hidden'>
                     {/* Mobile menu header */}
                     <div className='flex justify-between items-center py-5 px-4 border-b'>
-                        <span className='font-bold text-2xl'>Shopi</span>
+                        <span className='font-bold text-2xl'> KrishCart</span>
                         <button onClick={toggleMenu}>
                             <XMarkIcon className='h-6 w-6' />
                         </button>
@@ -231,7 +231,7 @@ const Navbar = () => {
                                     <NavLink
                                         to='/furnitures'
                                         onClick={() => {
-                                            context.setSearchByCategory('furnitures')
+                                            context.setSearchByCategory('furniture')
                                             toggleMenu()
                                         }}
                                         className={({ isActive }) =>
@@ -244,7 +244,7 @@ const Navbar = () => {
                                     <NavLink
                                         to='/toys'
                                         onClick={() => {
-                                            context.setSearchByCategory('toys')
+                                            context.setSearchByCategory('toy')
                                             toggleMenu()
                                         }}
                                         className={({ isActive }) =>
