@@ -1,59 +1,60 @@
 import { useContext } from 'react'
-import { PlusIcon, CheckIcon } from '@heroicons/react/24/solid'
+import { PlusIcon } from '@heroicons/react/24/solid'
 import { ShoppingCartContext } from '../../Context'
 
-const Card = (data) => {
-    const context = useContext(ShoppingCartContext)
+const Card = ({ data }) => {
+  const context = useContext(ShoppingCartContext)
 
-    const showProduct = (productDetail) => { 
-        context.openProductDetail()
-        context.setProductToShow(productDetail)
-    }
+  const showProduct = () => {
+    context.openProductDetail()
+    context.setProductToShow(data)
+  }
 
-    const addProductsToCart = (event, productData) => {
-        event.stopPropagation()
-        context.setCount(context.count + 1)
-        context.setCartProducts([...context.cartProducts, productData])
-        // Removemos context.openCheckoutSideMenu() para que no se abra automáticamente
-        context.closeProductDetail()
-    }
+  const addProductsToCart = (event, productData) => {
+    event.stopPropagation()
+    context.setCartProducts([...context.cartProducts, productData])
+    context.setCount(context.count + 1)
+    context.openCheckoutSideMenu()
+    context.closeProductDetail()
+  }
 
-    const renderIcon = (id) => {
-        const isInCart = context.cartProducts.filter(product => product.id === id).length > 0
+  return (
+    <div
+      className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer hover:-translate-y-1"
+      onClick={showProduct}
+    >
+      {/* Image */}
+      <figure className="relative h-56 w-full overflow-hidden rounded-t-2xl">
+        <span className="absolute bottom-3 left-3 bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs font-medium">
+          {data.category?.name}
+        </span>
 
-        if (isInCart) {
-            return (
-                <div 
-                    className="absolute top-0 right-0 flex justify-center items-center bg-black w-6 h-6 rounded-full m-2">
-                    <CheckIcon className='h-6 w-6 text-white'></CheckIcon>
-                </div>
-            )
-        } else {
-            return (
-                <div 
-                    className="absolute top-0 right-0 flex justify-center items-center bg-white w-6 h-6 rounded-full m-2 hover:bg-gray-100"
-                    onClick={(event) => addProductsToCart(event, data.data)}>
-                    <PlusIcon className='h-6 w-6 text-black'></PlusIcon>
-                </div>
-            )
-        }
-    }
+        <img
+          className="h-full w-full object-cover group-hover:scale-110 transition duration-500"
+          src={data.images?.[0]}
+          alt={data.title}
+        />
 
-    return(
-        <div 
-            className="bg-white cursor-pointer w-full max-w-[280px] mx-auto h-60 rounded-lg hover:shadow-lg transition-shadow"
-            onClick={() => showProduct(data.data)}>
-            <figure className="relative mb-2 w-full h-4/5">
-                <span className="absolute bottom-0 left-0 bg-white/60 rounded-lg text-black text-xs m-2 px-3 py-0.5">{data.data.category.name}</span>
-                <img className="w-full h-full object-cover rounded-lg" src={data.data.images[0]} alt={data.data.title} />
-                {renderIcon(data.data.id)}
-            </figure>
-            <p className="flex justify-between px-2 items-center">
-                <span className="text-sm font-light truncate">{data.data.title}</span>
-                <span className="text-lg font-medium">${data.data.price}</span>
-            </p>
-        </div>
-    )
+        <button
+          className="absolute top-3 right-3 flex items-center justify-center w-9 h-9 rounded-full bg-black text-white hover:scale-110 transition"
+          onClick={(event) => addProductsToCart(event, data)}
+        >
+          <PlusIcon className="h-5 w-5" />
+        </button>
+      </figure>
+
+      {/* Content */}
+      <div className="p-4 space-y-2">
+        <h3 className="text-sm font-medium text-gray-800 line-clamp-2">
+          {data.title}
+        </h3>
+
+        <p className="text-lg font-semibold text-black">
+          ${data.price}
+        </p>
+      </div>
+    </div>
+  )
 }
 
 export default Card

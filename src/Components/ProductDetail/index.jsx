@@ -1,65 +1,65 @@
-import { useContext } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/solid'
+import { useContext } from 'react'
 import { ShoppingCartContext } from '../../Context'
-import './styles.css'
 
 const ProductDetail = () => {
-    const context = useContext(ShoppingCartContext)
+  const context = useContext(ShoppingCartContext)
 
-    const handleAddToCart = (event) => {
-        event.stopPropagation()
-        context.setCartProducts([...context.cartProducts, context.productToShow])
-        context.openCheckoutSideMenu()
-        context.closeProductDetail()
-    }
+  return (
+    <aside
+      className={`fixed top-0 right-0 z-50 h-full w-[420px] bg-white shadow-2xl rounded-l-3xl transform transition-transform duration-300 ${
+        context.isProductDetailOpen ? 'translate-x-0' : 'translate-x-full'
+      }`}
+    >
+      {/* Header */}
+      <div className="flex justify-between items-center px-6 py-5 border-b">
+        <h2 className="text-lg font-semibold">Product Details</h2>
+        <button onClick={context.closeProductDetail}>
+          <XMarkIcon className="h-6 w-6 text-gray-500 hover:text-black" />
+        </button>
+      </div>
 
-    return (
-        <>
-            {/* Overlay con fade */}
-            <div 
-                className={`fixed inset-0 bg-black/50 transition-opacity duration-300 ease-in-out ${
-                    context.isProductDetailOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                }`}
-                onClick={() => context.closeProductDetail()}
-            />
-            
-            {/* Aside con transición */}
-            <aside 
-                className={`product-detail flex flex-col fixed right-0 border border-black rounded-lg bg-white
-                    transform transition-transform duration-300 ease-in-out
-                    ${context.isProductDetailOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-                <div className='flex justify-between items-center p-6'>
-                    <h2 className='font-medium text-xl'>Detail</h2>
-                    <div>
-                        <XMarkIcon
-                            className='h-6 w-6 text-black-500 cursor-pointer'
-                            onClick={() => context.closeProductDetail()}>
-                        </XMarkIcon>
-                    </div>
-                </div>
-                <div className='flex-1 overflow-y-auto'>
-                    <figure className='px-6'>
-                        <img
-                            src={context.productToShow.images}
-                            alt={context.productToShow.title}
-                            className='w-full h-full rounded-lg'/>
-                    </figure>
-                    <div className='flex flex-col p-6'>
-                        <span className='font-medium text-2xl mb-2'>${context.productToShow.price}</span>
-                        <span className='font-medium text-md'>{context.productToShow.title}</span>
-                        <span className='font-light text-sm'>{context.productToShow.description}</span>
-                    </div>
-                </div>
-                <div className='px-6 mb-6'>
-                    <button 
-                        className='bg-black py-3 text-white w-full rounded-lg' 
-                        onClick={handleAddToCart}>
-                        Add to Cart
-                    </button>
-                </div>
-            </aside>
-        </>
-    )
+      {/* Content */}
+      <div className="flex flex-col p-6 gap-5 overflow-y-auto h-[calc(100%-80px)]">
+        <img
+          className="w-full h-64 object-cover rounded-2xl"
+          src={context.productToShow?.images?.[0]}
+          alt={context.productToShow?.title}
+        />
+
+        <span className="text-sm text-gray-500">
+          {context.productToShow?.category?.name}
+        </span>
+
+        <h3 className="text-xl font-semibold">
+          {context.productToShow?.title}
+        </h3>
+
+        <p className="text-2xl font-bold">
+          ${context.productToShow?.price}
+        </p>
+
+        <p className="text-sm text-gray-600 leading-relaxed">
+          {context.productToShow?.description}
+        </p>
+
+        <button
+          className="mt-auto bg-black text-white py-3 rounded-full font-medium hover:scale-105 transition"
+          onClick={() => {
+            context.setCartProducts([
+              ...context.cartProducts,
+              context.productToShow,
+            ])
+            context.setCount(context.count + 1)
+            context.openCheckoutSideMenu()
+            context.closeProductDetail()
+          }}
+        >
+          Add to Cart
+        </button>
+      </div>
+    </aside>
+  )
 }
 
 export default ProductDetail

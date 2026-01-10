@@ -1,8 +1,15 @@
-const Layout = ({children}) => {
-    return (
-        <div className="flex flex-col items-center mt-20 px-4 md:px-0 py-2">
-            {children}
-        </div>
-    )
+import Footer from '../Footer'
+
+const Layout = ({ children }) => {
+  return (
+    <>
+      <main className="min-h-screen bg-gray-50">
+        {children}
+      </main>
+
+      <Footer />
+    </>
+  )
 }
+
 export default Layout
