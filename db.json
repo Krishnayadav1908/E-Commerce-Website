@@ -12,7 +12,7 @@
       "title": "Women Jacket",
       "price": 2499,
       "category": "Clothes",
-      "image": "https://images.unsplash.com/photo-1520975922071-a8e2b25f16ab"
+      "image": "https://plus.unsplash.com/premium_photo-1675186049366-64a655f8f537?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
       "id": 3,
@@ -40,7 +40,7 @@
       "title": "Wooden Chair",
       "price": 4999,
       "category": "Furniture",
-      "image": "https://images.unsplash.com/photo-1567016549638-2a1f1c4f8f2b"
+      "image": "https://images.unsplash.com/photo-1650476524564-f94dc9669067?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
       "id": 7,
@@ -55,6 +55,734 @@
       "price": 1299,
       "category": "Toys",
       "image": "https://images.unsplash.com/photo-1587654780291-39c9404d746b"
+    },
+    {
+      "id": 9,
+      "title": "Casual Polo Shirt",
+      "price": 899,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1760287363713-a864ca9b1b1f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      "id": 10,
+      "title": "Denim Jeans",
+      "price": 1599,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1542272604-787c3835535d"
+    },
+    {
+      "id": 11,
+      "title": "Summer Dress",
+      "price": 1299,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1"
+    },
+    {
+      "id": 12,
+      "title": "Hoodie Sweatshirt",
+      "price": 1799,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1556821840-3a63f95609a7"
+    },
+    {
+      "id": 13,
+      "title": "Formal Blazer",
+      "price": 3499,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1507679799987-c73779587ccf"
+    },
+    {
+      "id": 14,
+      "title": "Sports Shorts",
+      "price": 699,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1591195853828-11db59a44f6b"
+    },
+    {
+      "id": 15,
+      "title": "Winter Coat",
+      "price": 4999,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1539533018447-63fcce2678e3"
+    },
+    {
+      "id": 16,
+      "title": "Leather Belt",
+      "price": 499,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62"
+    },
+    {
+      "id": 17,
+      "title": "Silk Scarf",
+      "price": 799,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1601924994987-69e26d50dc26"
+    },
+    {
+      "id": 18,
+      "title": "Running Shoes",
+      "price": 2999,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+    },
+    {
+      "id": 19,
+      "title": "Bluetooth Speaker",
+      "price": 2499,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1"
+    },
+    {
+      "id": 20,
+      "title": "Laptop Stand",
+      "price": 1299,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46"
+    },
+    {
+      "id": 21,
+      "title": "Wireless Mouse",
+      "price": 799,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46"
+    },
+    {
+      "id": 22,
+      "title": "Mechanical Keyboard",
+      "price": 3499,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae"
+    },
+    {
+      "id": 23,
+      "title": "USB-C Hub",
+      "price": 1999,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1625723044792-44de16ccb4e9"
+    },
+    {
+      "id": 24,
+      "title": "Power Bank 20000mAh",
+      "price": 1499,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5"
+    },
+    {
+      "id": 25,
+      "title": "Webcam HD",
+      "price": 2999,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1587826080692-f439cd0b70da"
+    },
+    {
+      "id": 26,
+      "title": "Smart LED Bulb",
+      "price": 599,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1558171813-4c088753af8f"
+    },
+    {
+      "id": 27,
+      "title": "Fitness Tracker",
+      "price": 1799,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6"
+    },
+    {
+      "id": 28,
+      "title": "Tablet Stand",
+      "price": 899,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0"
+    },
+    {
+      "id": 29,
+      "title": "Wireless Earbuds",
+      "price": 2499,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df"
+    },
+    {
+      "id": 30,
+      "title": "Smart Doorbell",
+      "price": 4999,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64"
+    },
+    {
+      "id": 31,
+      "title": "Coffee Table",
+      "price": 7999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc"
+    },
+    {
+      "id": 32,
+      "title": "Bookshelf",
+      "price": 5999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1594620302200-9a762244a156"
+    },
+    {
+      "id": 33,
+      "title": "Office Desk",
+      "price": 12999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd"
+    },
+    {
+      "id": 34,
+      "title": "Dining Table",
+      "price": 15999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1617806118233-18e1de247200"
+    },
+    {
+      "id": 35,
+      "title": "Bed Frame Queen",
+      "price": 18999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85"
+    },
+    {
+      "id": 36,
+      "title": "Wardrobe",
+      "price": 22999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1558997519-83ea9252edf8"
+    },
+    {
+      "id": 37,
+      "title": "TV Stand",
+      "price": 6999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1616464916356-3a777b2b60b1"
+    },
+    {
+      "id": 38,
+      "title": "Recliner Chair",
+      "price": 14999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237"
+    },
+    {
+      "id": 39,
+      "title": "Bar Stool Set",
+      "price": 8999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1503602642458-232111445657"
+    },
+    {
+      "id": 40,
+      "title": "Shoe Rack",
+      "price": 2999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1595341888016-a392ef81b7de"
+    },
+    {
+      "id": 41,
+      "title": "Nightstand",
+      "price": 3999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1532372320572-cda25653a26d"
+    },
+    {
+      "id": 42,
+      "title": "Ottoman",
+      "price": 4499,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc"
+    },
+    {
+      "id": 43,
+      "title": "Building Blocks Set",
+      "price": 999,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1587654780291-39c9404d746b"
+    },
+    {
+      "id": 44,
+      "title": "Remote Control Helicopter",
+      "price": 2499,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1559628376-f3fe5f782a2e"
+    },
+    {
+      "id": 45,
+      "title": "Stuffed Teddy Bear",
+      "price": 699,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1558679908-541bcf1249ff"
+    },
+    {
+      "id": 46,
+      "title": "Puzzle Set 1000pc",
+      "price": 599,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1606503153255-59d8b8b82176"
+    },
+    {
+      "id": 47,
+      "title": "Action Figure Set",
+      "price": 1299,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1558507652-2d9626c4e67a"
+    },
+    {
+      "id": 48,
+      "title": "Board Game Collection",
+      "price": 1799,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09"
+    },
+    {
+      "id": 49,
+      "title": "Doll House",
+      "price": 3499,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1558060370-d644479cb6f7"
+    },
+    {
+      "id": 50,
+      "title": "RC Racing Car",
+      "price": 1999,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1594787318286-3d835c1d207f"
+    },
+    {
+      "id": 51,
+      "title": "Art Supply Kit",
+      "price": 899,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1513364776144-60967b0f800f"
+    },
+    {
+      "id": 52,
+      "title": "Science Experiment Kit",
+      "price": 1499,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1567427018141-0584cfcbf1b8"
+    },
+    {
+      "id": 53,
+      "title": "Musical Toy Piano",
+      "price": 1199,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0"
+    },
+    {
+      "id": 54,
+      "title": "Outdoor Play Set",
+      "price": 4999,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1566140967404-b8b3932483f5"
+    },
+    {
+      "id": 55,
+      "title": "Sunglasses",
+      "price": 999,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f"
+    },
+    {
+      "id": 56,
+      "title": "Backpack",
+      "price": 1499,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62"
+    },
+    {
+      "id": 57,
+      "title": "Water Bottle",
+      "price": 399,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1602143407151-7111542de6e8"
+    },
+    {
+      "id": 58,
+      "title": "Yoga Mat",
+      "price": 799,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f"
+    },
+    {
+      "id": 59,
+      "title": "Travel Pillow",
+      "price": 499,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2"
+    },
+    {
+      "id": 60,
+      "title": "Umbrella",
+      "price": 599,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1534309466160-70b22cc6252c"
+    },
+    {
+      "id": 61,
+      "title": "Wallet Leather",
+      "price": 899,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1627123424574-724758594e93"
+    },
+    {
+      "id": 62,
+      "title": "Watch Box",
+      "price": 1299,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa"
+    },
+    {
+      "id": 63,
+      "title": "Desk Organizer",
+      "price": 699,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1544816155-12df9643f363"
+    },
+    {
+      "id": 64,
+      "title": "Candle Set",
+      "price": 599,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1602607688915-cf8b14673b2e"
+    },
+    {
+      "id": 65,
+      "title": "Plant Pot Set",
+      "price": 899,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1485955900006-10f4d324d411"
+    },
+    {
+      "id": 66,
+      "title": "Wall Clock",
+      "price": 1199,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c"
+    },
+    {
+      "id": 67,
+      "title": "Linen Shirt",
+      "price": 1299,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c"
+    },
+    {
+      "id": 68,
+      "title": "Cargo Pants",
+      "price": 1799,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80"
+    },
+    {
+      "id": 69,
+      "title": "Cardigan Sweater",
+      "price": 2199,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105"
+    },
+    {
+      "id": 70,
+      "title": "Swimwear",
+      "price": 999,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1570976447640-ac859083963f"
+    },
+    {
+      "id": 71,
+      "title": "Graphic Tee",
+      "price": 699,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1576566588028-4147f3842f27"
+    },
+    {
+      "id": 72,
+      "title": "Chino Pants",
+      "price": 1499,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a"
+    },
+    {
+      "id": 73,
+      "title": "Portable SSD 1TB",
+      "price": 5999,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b"
+    },
+    {
+      "id": 74,
+      "title": "Ring Light",
+      "price": 1999,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1611532736597-de2d4265fba3"
+    },
+    {
+      "id": 75,
+      "title": "Mini Projector",
+      "price": 8999,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1626379953822-baec19c3accd"
+    },
+    {
+      "id": 76,
+      "title": "Smart Plug Set",
+      "price": 1299,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1558089687-f282ffcbc126"
+    },
+    {
+      "id": 77,
+      "title": "External DVD Drive",
+      "price": 1499,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1625842268584-8f3296236761"
+    },
+    {
+      "id": 78,
+      "title": "Monitor Arm",
+      "price": 2499,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf"
+    },
+    {
+      "id": 79,
+      "title": "Console Table",
+      "price": 8999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1532372320572-cda25653a26d"
+    },
+    {
+      "id": 80,
+      "title": "Accent Chair",
+      "price": 9999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c"
+    },
+    {
+      "id": 81,
+      "title": "Floating Shelf Set",
+      "price": 2499,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1597072689227-8882273e8f6a"
+    },
+    {
+      "id": 82,
+      "title": "Storage Bench",
+      "price": 6999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc"
+    },
+    {
+      "id": 83,
+      "title": "Computer Desk",
+      "price": 10999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89"
+    },
+    {
+      "id": 84,
+      "title": "Vanity Mirror",
+      "price": 4999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1616627561839-074385245ff6"
+    },
+    {
+      "id": 85,
+      "title": "Kids Play Kitchen",
+      "price": 5999,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088"
+    },
+    {
+      "id": 86,
+      "title": "Train Set",
+      "price": 2999,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1558507652-2d9626c4e67a"
+    },
+    {
+      "id": 87,
+      "title": "Dinosaur Figure Set",
+      "price": 1199,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1566140967404-b8b3932483f5"
+    },
+    {
+      "id": 88,
+      "title": "Basketball Hoop Mini",
+      "price": 1499,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1546519638-68e109498ffc"
+    },
+    {
+      "id": 89,
+      "title": "Magic Tricks Kit",
+      "price": 899,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1503602642458-232111445657"
+    },
+    {
+      "id": 90,
+      "title": "Drone Mini",
+      "price": 3999,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1507582020474-9a35b7d455d9"
+    },
+    {
+      "id": 91,
+      "title": "Makeup Bag",
+      "price": 599,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9"
+    },
+    {
+      "id": 92,
+      "title": "Jewelry Box",
+      "price": 1499,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908"
+    },
+    {
+      "id": 93,
+      "title": "Photo Frame Set",
+      "price": 799,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1582053433976-25c00369fc93"
+    },
+    {
+      "id": 94,
+      "title": "Essential Oil Diffuser",
+      "price": 1299,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108"
+    },
+    {
+      "id": 95,
+      "title": "Beach Towel",
+      "price": 699,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1601924994987-69e26d50dc26"
+    },
+    {
+      "id": 96,
+      "title": "Lunch Box Set",
+      "price": 499,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1544025162-d76694265947"
+    },
+    {
+      "id": 97,
+      "title": "Reusable Shopping Bag",
+      "price": 299,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1590874103328-eac38a683ce7"
+    },
+    {
+      "id": 98,
+      "title": "Leather Gloves",
+      "price": 1199,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1531856596943-dc4237ba32c1"
+    },
+    {
+      "id": 99,
+      "title": "Baseball Cap",
+      "price": 599,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b"
+    },
+    {
+      "id": 100,
+      "title": "Wool Beanie",
+      "price": 499,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9"
+    },
+    {
+      "id": 101,
+      "title": "Ankle Boots",
+      "price": 3499,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2"
+    },
+    {
+      "id": 102,
+      "title": "Loafers",
+      "price": 2499,
+      "category": "Clothes",
+      "image": "https://images.unsplash.com/photo-1533867617858-e7b97e060509"
+    },
+    {
+      "id": 103,
+      "title": "Gaming Headset",
+      "price": 3999,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb"
+    },
+    {
+      "id": 104,
+      "title": "Action Camera",
+      "price": 12999,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f"
+    },
+    {
+      "id": 105,
+      "title": "E-Reader",
+      "price": 7999,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c"
+    },
+    {
+      "id": 106,
+      "title": "Smart Thermostat",
+      "price": 6999,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1558089687-f282ffcbc126"
+    },
+    {
+      "id": 107,
+      "title": "L-Shaped Desk",
+      "price": 15999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89"
+    },
+    {
+      "id": 108,
+      "title": "Bunk Bed",
+      "price": 24999,
+      "category": "Furniture",
+      "image": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85"
+    },
+    {
+      "id": 109,
+      "title": "Robot Toy",
+      "price": 1999,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1535378620166-273708d44e4c"
+    },
+    {
+      "id": 110,
+      "title": "Water Gun Set",
+      "price": 599,
+      "category": "Toys",
+      "image": "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1"
+    },
+    {
+      "id": 111,
+      "title": "Key Holder",
+      "price": 399,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1586253634026-8cb574908d1e"
+    },
+    {
+      "id": 112,
+      "title": "Wine Glass Set",
+      "price": 1299,
+      "category": "Others",
+      "image": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3"
     }
   ]
 }
