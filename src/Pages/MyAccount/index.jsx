@@ -65,7 +65,7 @@ function MyAccount() {
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="font-medium">Total Amount:</span>
-                                        <span>${order.totalPrice}</span>
+                                        <span>Rs.{order.totalPrice}</span>
                                     </div>
                                 </div>
                             ))}

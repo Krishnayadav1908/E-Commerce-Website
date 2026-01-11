@@ -11,7 +11,7 @@ const OrdersCard = props => {
                     <span className="font-light">{totalProducts} articles</span>
                 </p>
                 <p className="flex items-center gap-2">
-                <span className="font-medium text-2xl">${totalPrice}</span>
+                <span className="font-medium text-2xl">Rs.{totalPrice}</span>
                     <ChevronRightIcon
                         className="h-6 w-6 text-black cursor-pointer" />
                 </p>

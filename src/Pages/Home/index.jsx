@@ -42,38 +42,39 @@ function Home() {
   console.log('ITEMS:', context.items)
   return (
     <Layout>
-      {/* HERO BANNER */}
-<div className="relative w-full max-w-7xl mx-auto mb-14 px-4">
-  <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-black to-gray-800 text-white">
-    
-    {/* Background Glow */}
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.15),transparent_60%)]"></div>
+{/* HERO BANNER */}
+<div className="relative w-full max-w-7xl mx-auto mb-20 px-4">
+  <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-black to-teal-900 text-white shadow-xl">
 
-    <div className="relative flex flex-col md:flex-row items-center justify-between px-8 py-16 gap-10">
-      
+    {/* Background Glow */}
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.1),transparent_70%)] blur-3xl"></div>
+
+    <div className="relative flex flex-col-reverse md:flex-row items-center justify-between px-8 py-16 gap-10">
+
       {/* Left Content */}
-      <div className="max-w-xl">
-        <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-          Upgrade Your Lifestyle
+      <div className="max-w-xl text-left">
+        <h1 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-wide">
+          Elevate Your Lifestyle
         </h1>
-        <p className="mt-4 text-gray-300 text-lg">
-          Discover premium products curated just for you at unbeatable prices.
+        <p className="mt-4 text-gray-300 text-lg md:text-xl">
+          Explore premium products from electronics, fashion, furniture, and more – curated for a modern lifestyle.
         </p>
 
-        <button
-          className="mt-8 bg-white text-black px-8 py-3 rounded-full font-medium
-                     hover:scale-105 transition">
+        <button className="mt-8 bg-teal-500 hover:bg-teal-400 text-white px-8 py-3 rounded-full font-semibold shadow-lg transition-all duration-300">
           Shop Now
         </button>
       </div>
 
       {/* Right Image */}
-      <div className="w-full md:w-96">
-        <img
-          src="https://images.unsplash.com/photo-1523275335684-37898b6baf30"
-          alt="Hero Product"
-          className="w-full h-64 md:h-72 object-cover rounded-2xl shadow-2xl"
-        />
+      <div className="w-full md:w-2/5 mt-10 md:mt-0 flex justify-center">
+        <div className="relative w-full h-72 md:h-96 rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-transparent z-10"></div>
+          <img
+            src="https://images.unsplash.com/photo-1491933382434-500287f9b54b?w=800&q=80"
+            alt="Hero Banner"
+            className="w-full h-full object-cover brightness-90"
+          />
+        </div>
       </div>
 
     </div>

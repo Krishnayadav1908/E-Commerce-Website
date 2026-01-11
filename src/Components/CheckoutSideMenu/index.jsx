@@ -59,7 +59,7 @@ const CheckoutSideMenu = () => {
             <div className='px-6 py-4 border-t border-gray-200 mt-auto'>
                 <p className='flex justify-between items-center mb-2'>
                     <span className='font-light'>Total:</span>
-                    <span className='font-medium text-2xl'>${totalPrice(context.cartProducts)}</span>
+                    <span className='font-medium text-2xl'>Rs.{totalPrice(context.cartProducts)}</span>
                 </p>
                 <button
                     className='bg-black py-3 text-white w-full rounded-lg'

@@ -40,7 +40,7 @@ function MyOrder() {
           </div>
           <div className="flex justify-between items-center">
             <span className="font-medium">Total Amount:</span>
-            <span>${totalAmount}</span>
+            <span>Rs.{totalAmount}</span>
           </div>
         </div>
       </div>
