@@ -9,18 +9,26 @@ function MyOrders() {
 
     return (
       <Layout>
-        <div className='flex items-center justify-center relative w-80 mb-4'>
-          <h1 className='font-medium text-xl'>My Orders</h1>
+        <div className='flex flex-col items-center justify-center min-h-[calc(100vh-80px)] py-12'>
+          <div className='flex items-center justify-center relative w-80 mb-8'>
+            <h1 className='font-medium text-xl'>My Orders</h1>
+          </div>
+          <div className='flex flex-col items-center'>
+            {
+              context.order && context.order.length > 0 ? (
+                context.order.map((order, index) => (
+                  <Link key={index} to={`/my-orders/${index}`}>
+                    <OrdersCard
+                      totalPrice={order.totalPrice}
+                      totalProducts={order.totalProducts} />
+                  </Link>
+                ))
+              ) : (
+                <p className='text-gray-500'>No orders yet</p>
+              )
+            }
+          </div>
         </div>
-        {
-          context.order.map((order, index) => (
-            <Link key={index} to={`/my-orders/${index}`}>
-              <OrdersCard
-                totalPrice={order.totalPrice}
-                totalProducts={order.totalProducts} />
-            </Link>
-          ))
-        }
       </Layout>
     )
   }

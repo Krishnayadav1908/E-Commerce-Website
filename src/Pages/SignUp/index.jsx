@@ -54,6 +54,7 @@ function SignUp() {
                   id="name"
                   type="text"
                   name="name"
+                  placeholder='Enter your name'
                   required
                   value={formData.name}
                   onChange={handleChange}
@@ -71,6 +72,7 @@ function SignUp() {
                   id="email"
                   type="email"
                   name="email"
+                  placeholder='Enter your email'
                   required
                   value={formData.email}
                   onChange={handleChange}
@@ -88,6 +90,7 @@ function SignUp() {
                   id="password"
                   type="password"
                   name="password"
+                  placeholder='Enter your password'
                   required
                   value={formData.password}
                   onChange={handleChange}
@@ -105,6 +108,7 @@ function SignUp() {
                   id="confirmPassword"
                   type="password"
                   name="confirmPassword"
+                  placeholder='Re-enter your password'
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}

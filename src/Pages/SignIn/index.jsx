@@ -40,6 +40,7 @@ function SignIn() {
                                     id="email"
                                     name="email"
                                     type="email"
+                                     placeholder='Enter your email'
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -57,6 +58,7 @@ function SignIn() {
                                     id="password"
                                     name="password"
                                     type="password"
+                                    placeholder='Enter your password'
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}

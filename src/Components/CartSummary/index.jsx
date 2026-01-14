@@ -42,7 +42,7 @@ const CartSummary = () => {
               key={product.id}
               id={product.id}
               title={product.title}
-              imageUrl={product.images}
+              imageUrl={product.image}
               price={product.price}
             />
           ))}
@@ -50,7 +50,7 @@ const CartSummary = () => {
           <div className='px-6 mb-6'>
             <p className='flex justify-between items-center mb-2'>
               <span className='font-light'>Total:</span>
-              <span className='font-medium text-2xl'>${totalPrice(context.cartProducts)}</span>
+              <span className='font-medium text-2xl'>Rs.{totalPrice(context.cartProducts)}</span>
             </p>
             {context.isUserAuthenticated ? (
               <button

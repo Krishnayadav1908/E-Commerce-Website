@@ -33,7 +33,9 @@ const Card = ({ data }) => {
         src={data.image}
         alt={data.title}
         onError={(e) => {
-        e.target.src = 'https://via.placeholder.com/300x300?text=No+Image'
+          // Hide broken image and show gray background instead
+          e.target.style.display = 'none'
+          e.target.parentElement.style.backgroundColor = '#e5e7eb'
         }}
         className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
       />

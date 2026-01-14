@@ -15,6 +15,9 @@ function MyOrder() {
   const totalItems = currentOrder?.products.length || 0
   const totalAmount = currentOrder?.products.reduce((sum, product) => sum + product.price, 0) || 0
 
+  console.log('Current Order:', currentOrder)
+  console.log('Products in order:', currentOrder?.products)
+
   return (
     <Layout>
       <div className='flex items-center justify-center relative w-80 mb-6'>
@@ -24,15 +27,18 @@ function MyOrder() {
         <h1>My Order</h1>
       </div>
       <div className='flex flex-col w-80'>
-        {currentOrder?.products.map(product => (
-          <OrderCard
-            key={product.id}
-            id={product.id}
-            title={product.title}
-            imageUrl={product.images}
-            price={product.price}
-          />
-        ))}
+        {currentOrder?.products.map(product => {
+          console.log('Product data:', product)
+          return (
+            <OrderCard
+              key={product.id}
+              id={product.id}
+              title={product.title}
+              imageUrl={product.image || product.imageUrl}
+              price={product.price}
+            />
+          )
+        })}
         <div className="border-t border-black mt-4 pt-4">
           <div className="flex justify-between items-center mb-2">
             <span className="font-medium">Total Items:</span>
