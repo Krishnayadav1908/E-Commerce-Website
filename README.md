@@ -123,7 +123,7 @@ http://localhost:5173
 
 1️⃣ Home Page – Product Listing
 
-![Home](screenshots/home.png)
+![Home](screenshots/Home.png)
 
 Displays all products fetched from the mock REST API.
 
