@@ -3,13 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
- "scripts": {
-  "dev": "vite",
-  "krishcart": "vite",
-  "build": "vite build",
-  "preview": "vite preview",
-  "server": "json-server --watch db.json --port 5001"
-},
+  "scripts": {
+    "dev": "vite",
+    "krishcart": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "json-server --watch db.json --port 5001"
+  },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
     "axios": "^1.13.2",
