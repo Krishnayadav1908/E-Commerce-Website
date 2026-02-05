@@ -1,7 +1,9 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });  // Load .env from backend folder
 const express = require('express');
+const cors = require('cors');
 const authMiddleware = require('./middleware/authMiddleware');
 require('./connection');
-
 
 
 const app = express();
@@ -10,6 +12,9 @@ const port = 3000;
 // Middleware to parse JSON bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Enable CORS for all routes
+app.use(cors());
 
 //routes
 const authRoutes = require('./routes/authRoutes');

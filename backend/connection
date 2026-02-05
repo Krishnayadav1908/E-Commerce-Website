@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const path = require('path');
 
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config({ path: path.join(__dirname, '.env') }); // Load .env from backend folder
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI,)

@@ -1,38 +1,47 @@
-import { useContext, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { ShoppingCartContext } from '../../Context'
-import Layout from '../../Components/Layout'
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ShoppingCartContext } from "../../Context";
+import Layout from "../../Components/Layout";
 
 function SignUp() {
-  const context = useContext(ShoppingCartContext)
-  const navigate = useNavigate()
+  const context = useContext(ShoppingCartContext);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    name: '',
-    confirmPassword: ''
-  })
-  const [error, setError] = useState('')
+    email: "",
+    password: "",
+    name: "",
+    confirmPassword: "",
+  });
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    
+  //(B)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match')
-      return
+      setError("Passwords do not match");
+      return;
     }
 
-    context.handleSignUp(formData.email, formData.password, formData.name)
-    navigate('/my-account')
-  }
+    const success = await context.handleSignUp(
+      formData.name,
+      formData.email,
+      formData.password,
+    );
+    if (success) {
+      navigate("/my-account");
+    } else {
+      setError("Registration failed. Please try again.");
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
-    setError('')
-  }
+      [e.target.name]: e.target.value,
+    });
+    setError("");
+  };
 
   return (
     <Layout>
@@ -46,7 +55,10 @@ function SignUp() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
                 Name
               </label>
               <div className="mt-2">
@@ -54,7 +66,7 @@ function SignUp() {
                   id="name"
                   type="text"
                   name="name"
-                  placeholder='Enter your name'
+                  placeholder="Enter your name"
                   required
                   value={formData.name}
                   onChange={handleChange}
@@ -64,7 +76,10 @@ function SignUp() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
                 Email address
               </label>
               <div className="mt-2">
@@ -72,7 +87,7 @@ function SignUp() {
                   id="email"
                   type="email"
                   name="email"
-                  placeholder='Enter your email'
+                  placeholder="Enter your email"
                   required
                   value={formData.email}
                   onChange={handleChange}
@@ -82,7 +97,10 @@ function SignUp() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
                 Password
               </label>
               <div className="mt-2">
@@ -90,7 +108,7 @@ function SignUp() {
                   id="password"
                   type="password"
                   name="password"
-                  placeholder='Enter your password'
+                  placeholder="Enter your password"
                   required
                   value={formData.password}
                   onChange={handleChange}
@@ -100,7 +118,10 @@ function SignUp() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium leading-6 text-gray-900">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
                 Confirm password
               </label>
               <div className="mt-2">
@@ -108,7 +129,7 @@ function SignUp() {
                   id="confirmPassword"
                   type="password"
                   name="confirmPassword"
-                  placeholder='Re-enter your password'
+                  placeholder="Re-enter your password"
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
@@ -130,7 +151,7 @@ function SignUp() {
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <Link
               to="/sign-in"
               className="font-semibold leading-6 text-black hover:text-gray-800"
@@ -141,7 +162,7 @@ function SignUp() {
         </div>
       </div>
     </Layout>
-  )
+  );
 }
 
-export default SignUp
+export default SignUp;
