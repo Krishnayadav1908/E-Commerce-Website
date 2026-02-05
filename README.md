@@ -1,177 +1,294 @@
-## 🛒 KrishCart
+# 🛒 KrishCart - E-Commerce Platform
 
-KrishCart is a frontend-focused e-commerce web application built using React and Vite.
-It covers basic e-commerce features like product listing, cart functionality, orders, and user authentication using client-side state management.
+![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-Authentication-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 
-The project is mainly focused on clean UI design, reusable components, and a practical React structure.
-It also uses JSON Server as a mock backend to simulate real-world API integration.
-KrishCart is fully responsive and built to understand how a real e-commerce frontend works.
+A **full-stack e-commerce web application** built with React.js and Express.js featuring JWT-based authentication, MongoDB database integration, and a modern responsive UI.
 
-## 🚀 Features (Currently Implemented)
+---
 
-• Product listing with categories
-• Fetch products from REST API
-• Global state management using React Context API
-• Add to cart functionality
-• Product detail view
-• Loading state handling
-• Responsive UI for all screen sizes
-• Mock backend using JSON Server
+## ✨ Features
 
-## 🧠 Project Overview
+### 🛍️ E-Commerce Features
 
-This project demonstrates how a modern React application interacts with backend APIs.
+- Product listing with category filtering
+- Product detail view with specifications
+- Shopping cart with add/remove functionality
+- Order management and history
+- Responsive design for all devices
 
-Product data is fetched from a mock REST API and displayed in a clean and user-friendly interface.
-JSON Server is used to simulate backend behavior, which helps in frontend development without a real database.
+### 🔐 Authentication & Security
 
-The goal of this project is to understand:
-• API-based data flow
-• State management
-• Component structure
-• Real-world frontend patterns
+- User registration and login
+- JWT (JSON Web Token) based authentication
+- Bcrypt password hashing
+- Protected routes for authenticated users
+- Secure API endpoints with middleware
 
-## 🧑‍💻 Tech Stack
+### 🏗️ Architecture
 
-Frontend
-• React.js
-• Vite
-• JavaScript (ES6+)
-• HTML5
-• Tailwind CSS
+- RESTful API design
+- Global state management with React Context API
+- Axios for HTTP requests
+- MongoDB for data persistence
+- JSON Server for product catalog
 
-State Management
-• React Context API
+---
 
-Backend (Mock)
-• JSON Server
+## 🚀 Tech Stack
 
-Tooling
-• npm
-• Axios
-• ESLint
+### Frontend
 
-📂 Project Structure
+| Technology          | Purpose                 |
+| ------------------- | ----------------------- |
+| React.js 18         | UI Library              |
+| Vite                | Build Tool & Dev Server |
+| Tailwind CSS        | Styling                 |
+| React Router DOM v6 | Client-side Routing     |
+| Axios               | HTTP Client             |
+| Heroicons           | Icons                   |
 
-```bash
-react-ecommerce/
-│
-├── src/
-│   ├── Components/
-│   ├── Pages/
-│   ├── Context/
-│   ├── services/
-│   ├── utils/
-│   ├── App.jsx
-│   └── main.jsx
-│
-├── db.json
-├── package.json
-├── README.md
-└── vite.config.js
+### Backend
+
+| Technology | Purpose               |
+| ---------- | --------------------- |
+| Node.js    | Runtime Environment   |
+| Express.js | Web Framework         |
+| MongoDB    | Database              |
+| Mongoose   | ODM                   |
+| JWT        | Authentication        |
+| Bcrypt     | Password Hashing      |
+| CORS       | Cross-Origin Requests |
+
+### DevOps & Tools
+
+| Technology   | Purpose              |
+| ------------ | -------------------- |
+| Concurrently | Run Multiple Scripts |
+| JSON Server  | Mock Product API     |
+| ESLint       | Code Linting         |
+| Git          | Version Control      |
+
+---
+
+## 📂 Project Structure
 
 ```
+KrishCart/
+├── backend/                 # Express.js Backend
+│   ├── controller/          # Request handlers
+│   │   └── authController.js
+│   ├── middleware/          # Auth middleware
+│   │   └── authMiddleware.js
+│   ├── models/              # Mongoose schemas
+│   │   └── userModels.js
+│   ├── routes/              # API routes
+│   │   └── authRoutes.js
+│   ├── utils/               # Utilities
+│   │   └── jwt.js
+│   ├── connection           # MongoDB connection
+│   ├── index.js             # Server entry point
+│   └── .env                 # Environment variables
+│
+├── src/                     # React Frontend
+│   ├── Components/          # Reusable UI components
+│   │   ├── Card/
+│   │   ├── CartSummary/
+│   │   ├── CheckoutSideMenu/
+│   │   ├── Footer/
+│   │   ├── Layout/
+│   │   ├── Navbar/
+│   │   ├── OrderCard/
+│   │   ├── ProductDetail/
+│   │   └── ProtectedRoute/
+│   ├── Pages/               # Page components
+│   │   ├── Home/
+│   │   ├── MyAccount/
+│   │   ├── MyOrder/
+│   │   ├── MyOrders/
+│   │   ├── SignIn/
+│   │   ├── SignUp/
+│   │   └── NotFound/
+│   ├── Context/             # Global state
+│   ├── services/            # API services
+│   └── utils/               # Helper functions
+│
+├── db.json                  # Product data (JSON Server)
+├── package.json
+└── README.md
+```
 
-▶️ Getting Started
+---
 
-Prerequisites
-• Node.js (v14+)
-• npm
+## ⚡ Quick Start
 
-Installation
+### Prerequisites
 
-1.  Clone the repository
+- Node.js (v16+)
+- npm or yarn
+- MongoDB Atlas account (or local MongoDB)
+
+### Installation
+
+1. **Clone the repository**
 
 ```bash
 git clone https://github.com/Krishnayadav1908/E-Commerce-Website.git
-cd react-ecommerce
+cd E-Commerce-Website
 ```
 
-2. Install dependencies
+2. **Install dependencies**
 
 ```bash
+# Root dependencies
 npm install
+
+# Backend dependencies
+cd backend && npm install
 ```
 
-3. Start JSON Server 4. Run the React application
+3. **Configure environment variables**
+
+Create `.env` file in `backend/` folder:
+
+```env
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+PORT=3000
+```
+
+4. **Run the application**
 
 ```bash
-npm run server
+npm start
 ```
 
-4. Run the React application
+This single command starts:
 
-```bash
-npm run dev
+- 🖥️ React Frontend → `http://localhost:5173`
+- 🔧 Express Backend → `http://localhost:3000`
+- 📦 JSON Server → `http://localhost:5001`
+
+---
+
+## 🔗 API Endpoints
+
+### Authentication
+
+| Method | Endpoint             | Description                      |
+| ------ | -------------------- | -------------------------------- |
+| POST   | `/api/auth/register` | Register new user                |
+| POST   | `/api/auth/login`    | Login user                       |
+| GET    | `/api/protected`     | Protected route (requires token) |
+
+### Products (JSON Server)
+
+| Method | Endpoint        | Description        |
+| ------ | --------------- | ------------------ |
+| GET    | `/products`     | Get all products   |
+| GET    | `/products/:id` | Get single product |
+
+---
+
+## 🔄 Application Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         FRONTEND                                 │
+│  ┌─────────┐  ┌──────────┐  ┌─────────┐  ┌──────────────────┐  │
+│  │ React   │──│  Context │──│  Axios  │──│ React Router DOM │  │
+│  │ Pages   │  │   API    │  │         │  │                  │  │
+│  └─────────┘  └──────────┘  └────┬────┘  └──────────────────┘  │
+└───────────────────────────────────┼─────────────────────────────┘
+                                    │ HTTP
+┌───────────────────────────────────┼─────────────────────────────┐
+│                         BACKEND   │                              │
+│  ┌─────────┐  ┌──────────┐  ┌────┴────┐  ┌──────────────────┐  │
+│  │ Express │──│  Routes  │──│  JWT    │──│    MongoDB       │  │
+│  │ Server  │  │          │  │ + Bcrypt│  │   (Mongoose)     │  │
+│  └─────────┘  └──────────┘  └─────────┘  └──────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-5. Open in browser
+---
 
-```bash
-http://localhost:5173
-```
+---
 
-🔄 Application Flow
-• React app initializes
-• Context API sets up global state
-• Product data is fetched from JSON Server using Axios
-• Data is stored in Context
-• Components consume data and render UI
-• Loading state is shown until data is available
+## 🖼️ Screenshots
 
-🖼️ Screenshots
+<table>
+  <tr>
+    <td><img src="screenshots/Home.png" alt="Home Page" width="400"/></td>
+    <td><img src="screenshots/category.png" alt="Category Filter" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Home Page - Product Listing</b></td>
+    <td align="center"><b>Category Filtering</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/product-detail.png" alt="Product Detail" width="400"/></td>
+    <td><img src="screenshots/cart.png" alt="Cart" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Product Detail View</b></td>
+    <td align="center"><b>Shopping Cart</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/signin.png" alt="Sign In" width="400"/></td>
+    <td><img src="screenshots/signup.png" alt="Sign Up" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Sign In Page</b></td>
+    <td align="center"><b>Sign Up Page</b></td>
+  </tr>
+</table>
 
-1️⃣ Home Page – Product Listing
+---
 
-![Home](screenshots/Home.png)
+## 👨‍💻 Key Accomplishments
 
-Displays all products fetched from the mock REST API.
+- Built complete e-commerce frontend with React.js and component-based architecture
+- Implemented JWT-based authentication system with secure password hashing
+- Designed RESTful API with Express.js following best practices
+- Integrated MongoDB database with Mongoose ODM
+- Created responsive UI using Tailwind CSS (mobile-first approach)
+- Set up efficient development workflow with Vite and Concurrently
 
-2️⃣ Category Filtering
+---
 
-![category](screenshots/category.png)
-Products filtered by categories like Electronics, Furniture, Clothing, etc.
+## 📌 Future Roadmap
 
-3️⃣ Product Detail View
+- [ ] Payment gateway integration (Stripe/Razorpay)
+- [ ] Admin dashboard for product management
+- [ ] Order tracking system
+- [ ] Email notifications
+- [ ] Deploy on Vercel/Railway
 
-![product-detail](screenshots/product-detail.png)
-Shows detailed information of the selected product.
+---
 
-4️⃣ Cart / Checkout Side Menu
-![cart](screenshots/cart.png)
-Selected products added to cart with total price.
+## 🤝 Contributing
 
-5️⃣ Authentication Screens
-![signup](screenshots/signup.png)
-![signin](screenshots/signin.png)
-Sign In and Sign Up UI flow.
+Contributions are welcome! Feel free to open issues or submit pull requests.
 
-## 👨‍💻 Contribution
+---
 
-This project is built individually.
+## 📄 License
 
-Key responsibilities:
-• React component development
-• API integration using Axios
-• Global state management with Context API
-• Handling loading states
-• JSON Server setup and configuration
-• Debugging API and port-related issues
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## ⚠️ Limitations
+---
 
-• No real authentication
-• Uses mock backend instead of a real database
-• Payment gateway not implemented
-• Not deployed (backend is local JSON Server)
+## 👤 Author
 
-## 📌 Future Improvements
+**Krishna Yadav**
 
-    •	Integrate hosted API (DummyJSON or custom backend)
-    •	Authentication with JWT
-    •	Payment integration
-    •	Deployment with hosted backend
+- GitHub: [@Krishnayadav1908](https://github.com/Krishnayadav1908)
 
-## Note
+---
 
-This project was built to understand real-world frontend development practices and API-driven UI design using React.
+<p align="center">
+  Made with ❤️ using React.js & Express.js
+</p>
