@@ -1,15 +1,14 @@
-import Footer from '../Footer'
+import Footer from "../Footer";
 
 const Layout = ({ children }) => {
   return (
     <>
-      <main className="min-h-screen bg-gray-50">
-        {children}
-      </main>
+      {/* Add top margin to prevent content from hiding behind navbar */}
+      <main className="min-h-screen bg-gray-50 mt-16">{children}</main>
 
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

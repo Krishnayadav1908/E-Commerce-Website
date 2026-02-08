@@ -1,22 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controller/authController');
+const Stripe = require('stripe');
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY); // Use Stripe secret key from .env
 
-
-
-// Register route   
-router.post('/register', authController.register);
-
-// Login route
-router.post('/login', authController.login);
-
-// Stripe payment intent creation route
+// Create PaymentIntent
 router.post('/create-payment-intent', async (req, res) => {
   const { amount } = req.body;
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
-      currency: 'usd',
+      currency: 'inr',
     });
     res.send({ clientSecret: paymentIntent.client_secret });
   } catch (error) {

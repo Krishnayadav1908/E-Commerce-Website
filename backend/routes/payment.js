@@ -1,16 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controller/authController');
+const Stripe = require('stripe');
+const stripe = Stripe('sk_test_YOUR_TEST_SECRET_KEY'); // Apni Stripe test secret key yahan daalein
 
-
-
-// Register route   
-router.post('/register', authController.register);
-
-// Login route
-router.post('/login', authController.login);
-
-// Stripe payment intent creation route
 router.post('/create-payment-intent', async (req, res) => {
   const { amount } = req.body;
   try {
