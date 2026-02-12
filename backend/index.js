@@ -18,6 +18,10 @@ app.use(cors());
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
+// Products route
+const productsRoutes = require('./routes/products');
+app.use('/api/products', productsRoutes);
+
 // Payment routes
 const paymentRoutes = require('./routes/payment');
 app.use('/api/payment', paymentRoutes);
