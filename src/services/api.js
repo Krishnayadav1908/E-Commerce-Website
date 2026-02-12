@@ -1,13 +1,14 @@
+
 import axios from 'axios'
 
 // Products API (JSON Server)
 const api = axios.create({
-  baseURL: 'http://localhost:5001'
+  baseURL: import.meta.env.VITE_PRODUCTS_API_URL
 })
 
 // Auth API (Express Backend)
 const authApi = axios.create({
-  baseURL: 'http://localhost:3000/api'
+  baseURL: import.meta.env.VITE_API_URL
 })
 
 export const loginUser = (email, password) => 
