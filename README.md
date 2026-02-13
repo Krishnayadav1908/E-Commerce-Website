@@ -132,15 +132,20 @@ VITE_API_URL=http://localhost:3000
 
 ### 4️⃣ Run Application
 
-# Start Backend
+#### ▶ Start Backend
 
+```bash
 cd backend
-npm start
+node index.js
+```
 
-# Start Frontend
+#### ▶ Start Frontend
 
+```bash
 cd ../react-ecommerce
 npm run dev
+```
+
 Frontend → http://localhost:5173  
 Backend → http://localhost:3000
 
@@ -231,7 +236,7 @@ JWT Authentication
 ### 🗄️ MongoDB Database (Atlas)
 
 <p align="center">
-  <img src="screenshots/mongodb.png" width="600"/>
+  <img src="screenshots/db.png" width="600"/>
 </p>
 
 <p align="center">
