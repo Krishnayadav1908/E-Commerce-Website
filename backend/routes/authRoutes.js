@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controller/authController');
-
-
+const authMiddleware = require('../middleware/authMiddleware');
 
 // Register route   
 router.post('/register', authController.register);
@@ -10,18 +9,7 @@ router.post('/register', authController.register);
 // Login route
 router.post('/login', authController.login);
 
-// Stripe payment intent creation route
-router.post('/create-payment-intent', async (req, res) => {
-  const { amount } = req.body;
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: 'usd',
-    });
-    res.send({ clientSecret: paymentIntent.client_secret });
-  } catch (error) {
-    res.status(500).send({ error: error.message });
-  }
-});
+// User profile route (protected)
+router.get('/profile', authMiddleware, authController.profile);
 
 module.exports = router;

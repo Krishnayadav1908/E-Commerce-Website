@@ -1,14 +1,21 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ShoppingCartContext } from "../../Context";
 import { useNavigate } from "react-router-dom";
-import StripePayment from "../../Components/StripePayment/stripepayment";
 import Layout from "../../Components/Layout";
 import { totalPrice } from "../../utils";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
-
+import api, { authApi } from "../../services/api";
 const CheckoutPage = () => {
   const context = useContext(ShoppingCartContext);
   const navigate = useNavigate();
+  const [address, setAddress] = useState({
+    name: "",
+    street: "",
+    city: "",
+    state: "",
+    zip: "",
+    phone: "",
+  });
 
   return (
     <Layout>
@@ -23,9 +30,10 @@ const CheckoutPage = () => {
           </button>
           <h1 className="font-semibold text-2xl md:text-3xl">Checkout</h1>
         </div>
-        <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Main content side by side on desktop */}
+        <div className="w-full max-w-5xl flex flex-col md:flex-row gap-8">
           {/* Cart Summary (read-only) */}
-          <div className="md:col-span-2 bg-white rounded-lg shadow p-6 flex flex-col">
+          <div className="md:w-2/3 bg-white rounded-lg shadow p-6 flex flex-col mb-8 md:mb-0">
             <h2 className="font-medium text-lg mb-4">Your Items</h2>
             <div className="flex flex-col gap-4">
               {context.cartProducts.length === 0 ? (
@@ -59,10 +67,129 @@ const CheckoutPage = () => {
               </span>
             </div>
           </div>
-          {/* Payment Section */}
-          <div className="bg-white rounded-lg shadow p-6 flex flex-col gap-6 min-w-[300px]">
+          {/* Address & Payment Section */}
+          <div className="md:w-1/3 bg-white rounded-lg shadow p-6 flex flex-col gap-6 min-w-[300px]">
+            <h2 className="font-medium text-lg mb-2">Shipping Address</h2>
+            <form className="flex flex-col gap-2">
+              <input
+                type="text"
+                required
+                placeholder="Name"
+                value={address.name}
+                onChange={(e) =>
+                  setAddress({ ...address, name: e.target.value })
+                }
+                className="border p-2 rounded"
+              />
+              <input
+                type="text"
+                placeholder="Street"
+                required
+                value={address.street}
+                onChange={(e) =>
+                  setAddress({ ...address, street: e.target.value })
+                }
+                className="border p-2 rounded"
+              />
+              <input
+                type="text"
+                placeholder="City"
+                required
+                value={address.city}
+                onChange={(e) =>
+                  setAddress({ ...address, city: e.target.value })
+                }
+                className="border p-2 rounded"
+              />
+              <input
+                type="text"
+                placeholder="State"
+                required
+                value={address.state}
+                onChange={(e) =>
+                  setAddress({ ...address, state: e.target.value })
+                }
+                className="border p-2 rounded"
+              />
+              <input
+                type="text"
+                placeholder="ZIP"
+                required
+                value={address.zip}
+                onChange={(e) =>
+                  setAddress({
+                    ...address,
+                    zip: e.target.value.replace(/\D/g, "").slice(0, 6),
+                  })
+                }
+                className="border p-2 rounded"
+              />
+              <input
+                type="text"
+                placeholder="Phone"
+                value={address.phone}
+                required
+                onChange={(e) =>
+                  setAddress({
+                    ...address,
+                    phone: e.target.value.replace(/\D/g, "").slice(0, 10),
+                  })
+                }
+                className="border p-2 rounded"
+              />
+            </form>
             <h2 className="font-medium text-lg mb-2">Payment</h2>
-            <StripePayment amount={totalPrice(context.cartProducts)} />
+            <button
+              className="bg-green-600 text-white px-4 py-2 rounded mt-4 w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={
+                !address.name ||
+                !address.street ||
+                !address.city ||
+                !address.state ||
+                !address.zip ||
+                !address.phone
+              }
+              onClick={async () => {
+                if (context.cartProducts.length === 0) {
+                  alert("Add a product to cart!");
+                  return;
+                }
+                // Debug log for account and _id
+                console.log("DEBUG: context.account =", context.account);
+                console.log(
+                  "DEBUG: context.account._id =",
+                  context.account?._id,
+                );
+                if (!context.account || !context.account._id) {
+                  alert("User not logged in!");
+                  return;
+                }
+                try {
+                  const token = localStorage.getItem("token");
+                  const orderData = {
+                    userId: context.account._id,
+                    products: context.cartProducts,
+                    totalPrice: totalPrice(context.cartProducts),
+                    totalProducts: context.cartProducts.length,
+                    date: new Date().toLocaleString(),
+                    address,
+                  };
+                  await authApi.post("/order/create", orderData, {
+                    headers: { Authorization: `Bearer ${token}` },
+                  });
+                  alert("Order placed successfully!");
+                  context.fetchUserOrders(context.account._id, token);
+                  context.setCartProducts([]);
+                } catch (err) {
+                  alert(
+                    "Order failed: " +
+                      (err?.response?.data?.error || err.message),
+                  );
+                }
+              }}
+            >
+              Pay Now
+            </button>
           </div>
         </div>
       </div>

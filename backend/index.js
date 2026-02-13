@@ -26,13 +26,15 @@ app.use('/api/products', productsRoutes);
 const paymentRoutes = require('./routes/payment');
 app.use('/api/payment', paymentRoutes);
 
+// Order routes
+const orderRoutes = require('./routes/order');
+app.use('/api/order', orderRoutes);
+
 // Public endpoint to get Stripe Public Key for frontend
 app.get('/api/stripe-public-key', (req, res) => {
   res.json({ key: process.env.STRIPE_PUBLIC_KEY });
 });
-// Stripe routes
-const stripeRoutes = require('./routes/stripe');
-app.use('/api/stripe', stripeRoutes);
+
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env') });  // Load .env from backend folder
 

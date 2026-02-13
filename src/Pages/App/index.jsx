@@ -3,6 +3,7 @@ import { ShoppingCartProvider } from "../../Context";
 import Home from "../Home";
 import MyAccount from "../MyAccount";
 import MyOrder from "../MyOrder";
+import OrderDetail from "../OrderDetail";
 import MyOrders from "../MyOrders";
 import NotFound from "../NotFound";
 import SignIn from "../SignIn";
@@ -57,10 +58,10 @@ const AppRoutes = () => {
       ),
     },
     {
-      path: "/my-orders/:id",
+      path: "/my-orders/:index",
       element: (
         <ProtectedRoute>
-          <MyOrder />
+          <OrderDetail />
         </ProtectedRoute>
       ),
     },

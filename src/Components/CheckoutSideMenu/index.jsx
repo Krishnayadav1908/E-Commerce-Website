@@ -2,10 +2,11 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { ShoppingCartContext } from "../../Context";
+import { authApi } from "../../services/api";
 import OrderCard from "../OrderCard";
 import { totalPrice } from "../../utils";
 import "./styles.css";
-import StripePayment from "../StripePayment/stripepayment";
+// StripePayment removed
 
 const CheckoutSideMenu = () => {
   const context = useContext(ShoppingCartContext);
@@ -19,6 +20,7 @@ const CheckoutSideMenu = () => {
   };
 
   const handleViewCart = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     context.closeCheckoutSideMenu();
     navigate("/cart-summary");
   };
@@ -55,7 +57,7 @@ const CheckoutSideMenu = () => {
               key={product.id}
               id={product.id}
               title={product.title}
-              imageUrl={product.images}
+              imageUrl={product.image || product.images}
               price={product.price}
               handleDelete={handleDelete}
             />
@@ -77,7 +79,44 @@ const CheckoutSideMenu = () => {
           </button>
         </div>
         <div className="px-6 py-4 border-t border-gray-200">
-          <StripePayment amount={totalPrice(context.cartProducts)} />
+          <button
+            className="bg-green-600 text-white px-4 py-2 rounded mt-4 w-full"
+            onClick={async () => {
+              if (context.cartProducts.length === 0) {
+                alert("Add a product to cart!");
+                return;
+              }
+              if (!context.account || !context.account._id) {
+                alert("User not logged in!");
+                return;
+              }
+              try {
+                const token = localStorage.getItem("token");
+                const orderData = {
+                  userId: context.account._id,
+                  products: context.cartProducts,
+                  totalPrice: totalPrice(context.cartProducts),
+                  totalProducts: context.cartProducts.length,
+                  date: new Date().toLocaleString(),
+                  address: {}, // No address in side menu
+                };
+                await authApi.post("/order/create", orderData, {
+                  headers: { Authorization: `Bearer ${token}` },
+                });
+                alert("Order placed successfully!");
+                await context.fetchUserOrders(context.account._id, token);
+                context.setCartProducts([]);
+                context.closeCheckoutSideMenu();
+              } catch (err) {
+                alert(
+                  "Order failed: " +
+                    (err?.response?.data?.error || err.message),
+                );
+              }
+            }}
+          >
+            Pay Now
+          </button>
         </div>
       </aside>
     </>

@@ -1,3 +1,6 @@
+// Get user profile (requires token)
+export const getUserProfile = (token) =>
+  authApi.get('/auth/profile', { headers: { Authorization: `Bearer ${token}` } });
 
 import axios from 'axios'
 
@@ -7,7 +10,7 @@ const api = axios.create({
 })
 
 // Auth API (Express Backend)
-const authApi = axios.create({
+export const authApi = axios.create({
   baseURL: import.meta.env.VITE_API_URL
 })
 

@@ -1,10 +1,23 @@
 import { createContext, useState, useEffect, useMemo } from "react";
-import api from "../services/api";
-import { loginUser, registerUser } from "../services/api";
+import api, { authApi } from "../services/api";
+import { loginUser, registerUser, getUserProfile } from "../services/api";
 
 export const ShoppingCartContext = createContext();
 
 export const ShoppingCartProvider = ({ children }) => {
+  // Cart State (already declared at the top, remove duplicate)
+
+  // Fetch user orders from backend (now has access to setOrder)
+  const fetchUserOrders = async (userId, token) => {
+    try {
+      const response = await authApi.get(`/order/user/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setOrder(response.data);
+    } catch (error) {
+      console.error("Error fetching user orders:", error);
+    }
+  };
   // Cart State
   const [count, setCount] = useState(0);
   const [cartProducts, setCartProducts] = useState([]);
@@ -37,15 +50,10 @@ export const ShoppingCartProvider = ({ children }) => {
     const loadUserSession = () => {
       const savedAccount = localStorage.getItem("account");
       const savedIsAuth = localStorage.getItem("isUserAuthenticated");
-      const savedOrder = localStorage.getItem("order");
 
       if (savedAccount && savedIsAuth === "true") {
         setAccount(JSON.parse(savedAccount));
         setIsUserAuthenticated(true);
-      }
-
-      if (savedOrder) {
-        setOrder(JSON.parse(savedOrder));
       }
 
       setIsLoading(false);
@@ -54,12 +62,7 @@ export const ShoppingCartProvider = ({ children }) => {
     loadUserSession();
   }, []);
 
-  // Save order to localStorage when it changes
-  useEffect(() => {
-    if (order.length > 0) {
-      localStorage.setItem("order", JSON.stringify(order));
-    }
-  }, [order]);
+  // No localStorage for orders: always use backend
 
   // Authentication methods(B)
   const handleSignIn = async (email, password) => {
@@ -69,8 +72,17 @@ export const ShoppingCartProvider = ({ children }) => {
 
       localStorage.setItem("token", token);
       localStorage.setItem("isUserAuthenticated", "true");
-      setAccount({ email });
+
+      // Fetch user profile (with _id)
+      const profileRes = await getUserProfile(token);
+      const user = profileRes.data;
+      setAccount(user);
+      localStorage.setItem("account", JSON.stringify(user));
       setIsUserAuthenticated(true);
+
+      // Clear previous orders from local state and localStorage
+      setOrder([]);
+      localStorage.removeItem("order");
 
       // Load pending cart from localStorage if exists
       const pendingCart = localStorage.getItem("pendingCart");
@@ -93,8 +105,17 @@ export const ShoppingCartProvider = ({ children }) => {
 
       localStorage.setItem("token", token);
       localStorage.setItem("isUserAuthenticated", "true");
-      setAccount({ email, name });
+
+      // Fetch user profile (with _id)
+      const profileRes = await getUserProfile(token);
+      const user = profileRes.data;
+      setAccount(user);
+      localStorage.setItem("account", JSON.stringify(user));
       setIsUserAuthenticated(true);
+
+      // Clear previous orders from local state and localStorage
+      setOrder([]);
+      localStorage.removeItem("order");
 
       return true;
     } catch (error) {
@@ -204,6 +225,7 @@ export const ShoppingCartProvider = ({ children }) => {
     handleSignIn,
     handleSignUp,
     handleSignOut,
+    fetchUserOrders,
   };
 
   return (
