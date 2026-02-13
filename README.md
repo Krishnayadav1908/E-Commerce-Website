@@ -1,4 +1,4 @@
-# 🛒 KrishCart - E-Commerce Platform
+# 🛒 KrishCart – Full Stack MERN E-Commerce Platform
 
 ![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js&logoColor=white)
@@ -6,239 +6,219 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-Authentication-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 
-A **full-stack e-commerce web application** built with React.js and Express.js featuring JWT-based authentication, MongoDB database integration, and a modern responsive UI.
+---
+
+## 🚀 Project Overview
+
+**KrishCart** is a production-ready full-stack e-commerce web application built using the MERN stack.  
+It allows users to browse products, register, log in securely using JWT authentication, add items to cart, place orders, and view order history.
+
+All data is persisted in MongoDB Atlas and the application is fully deployed on Render.
+
+---
+
+## 🌐 Live Demo
+
+- 🔗 Frontend: https://e-commerce-website-frontend-kz6e.onrender.com
+- 🔗 Backend API: https://e-commerce-website-backend-f1ka.onrender.com
 
 ---
 
 ## ✨ Features
 
-### 🛍️ E-Commerce Features
-
-- Product listing with category filtering
-- Product detail view with specifications
-- Shopping cart with add/remove functionality
-- Order management and history
-- Responsive design for all devices
-
-### 🔐 Authentication & Security
-
-- User registration and login
-- JWT (JSON Web Token) based authentication
-- Bcrypt password hashing
-- Protected routes for authenticated users
-- Secure API endpoints with middleware
-
-### 🏗️ Architecture
-
-- RESTful API design
-- Global state management with React Context API
-- Axios for HTTP requests
-- MongoDB for data persistence
-- JSON Server for product catalog
+- 🔐 JWT-based Authentication (Register / Login)
+- 👤 Secure User Profile Route
+- 🛍️ Product Listing & Product Details
+- 🛒 Add to Cart & Checkout (Fake Payment Flow)
+- 📦 Order Creation & Order History
+- 🗄️ MongoDB Atlas Integration
+- 📱 Fully Responsive UI
+- ☁️ Full Deployment on Render
 
 ---
 
-## 🚀 Tech Stack
+## 🛠️ Tech Stack
 
 ### Frontend
 
-| Technology          | Purpose                 |
-| ------------------- | ----------------------- |
-| React.js 18         | UI Library              |
-| Vite                | Build Tool & Dev Server |
-| Tailwind CSS        | Styling                 |
-| React Router DOM v6 | Client-side Routing     |
-| Axios               | HTTP Client             |
-| Heroicons           | Icons                   |
+- React.js (Vite)
+- Tailwind CSS
+- Axios
+- React Router DOM
+- Context API
 
 ### Backend
 
-| Technology | Purpose               |
-| ---------- | --------------------- |
-| Node.js    | Runtime Environment   |
-| Express.js | Web Framework         |
-| MongoDB    | Database              |
-| Mongoose   | ODM                   |
-| JWT        | Authentication        |
-| Bcrypt     | Password Hashing      |
-| CORS       | Cross-Origin Requests |
+- Node.js
+- Express.js
+- MongoDB Atlas
+- Mongoose ODM
+- JWT Authentication
+- Bcrypt Password Hashing
 
-### DevOps & Tools
+### Deployment
 
-| Technology   | Purpose              |
-| ------------ | -------------------- |
-| Concurrently | Run Multiple Scripts |
-| JSON Server  | Mock Product API     |
-| ESLint       | Code Linting         |
-| Git          | Version Control      |
+- Render
 
 ---
 
 ## 📂 Project Structure
 
-```
+```bash
 KrishCart/
-├── backend/                 # Express.js Backend
-│   ├── controller/          # Request handlers
-│   │   └── authController.js
-│   ├── middleware/          # Auth middleware
-│   │   └── authMiddleware.js
-│   ├── models/              # Mongoose schemas
-│   │   └── userModels.js
-│   ├── routes/              # API routes
-│   │   └── authRoutes.js
-│   ├── utils/               # Utilities
-│   │   └── jwt.js
-│   ├── connection           # MongoDB connection
-│   ├── index.js             # Server entry point
-│   └── .env                 # Environment variables
+├── backend/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── config/
+│   ├── index.js
+│   └── .env
 │
-├── src/                     # React Frontend
-│   ├── Components/          # Reusable UI components
-│   │   ├── Card/
-│   │   ├── CartSummary/
-│   │   ├── CheckoutSideMenu/
-│   │   ├── Footer/
-│   │   ├── Layout/
-│   │   ├── Navbar/
-│   │   ├── OrderCard/
-│   │   ├── ProductDetail/
-│   │   └── ProtectedRoute/
-│   ├── Pages/               # Page components
-│   │   ├── Home/
-│   │   ├── MyAccount/
-│   │   ├── MyOrder/
-│   │   ├── MyOrders/
-│   │   ├── SignIn/
-│   │   ├── SignUp/
-│   │   └── NotFound/
-│   ├── Context/             # Global state
-│   ├── services/            # API services
-│   └── utils/               # Helper functions
+├── react-ecommerce/
+│   ├── src/
+│   │   ├── Components/
+│   │   ├── Pages/
+│   │   ├── Context/
+│   │   ├── services/
+│   │   └── utils/
+│   └── vite.config.js
 │
-├── db.json                  # Product data (JSON Server)
-├── package.json
 └── README.md
+
 ```
 
 ---
 
-## ⚡ Quick Start
+## ⚙️ Setup Instructions
 
 ### Prerequisites
 
 - Node.js (v16+)
-- npm or yarn
-- MongoDB Atlas account (or local MongoDB)
+- npm
+- MongoDB Atlas Account
 
-### Installation
+---
 
-1. **Clone the repository**
+### 1️⃣ Clone Repository
 
 ```bash
 git clone https://github.com/Krishnayadav1908/E-Commerce-Website.git
 cd E-Commerce-Website
+
 ```
 
-2. **Install dependencies**
+### 2️⃣ Install Dependencies
 
-```bash
-# Root dependencies
+# Backend
+
+cd backend
 npm install
 
-# Backend dependencies
-cd backend && npm install
-```
+# Frontend
 
-3. **Configure environment variables**
+cd ../react-ecommerce
+npm install
 
-Create `.env` file in `backend/` folder:
+### 3️⃣ Environment Variables
 
-```env
+Create .env file inside the backend/ folder:
 MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
+JWT_SECRET=your_secret_key
 PORT=3000
-```
 
-4. **Run the application**
+Create .env inside react-ecommerce/:
+VITE_API_URL=http://localhost:3000
 
-```bash
+### 4️⃣ Run Application
+
+# Start Backend
+
+cd backend
 npm start
-```
 
-This single command starts:
+# Start Frontend
 
-- 🖥️ React Frontend → `http://localhost:5173`
-- 🔧 Express Backend → `http://localhost:3000`
-- 📦 JSON Server → `http://localhost:5001`
+cd ../react-ecommerce
+npm run dev
+Frontend → http://localhost:5173  
+Backend → http://localhost:3000
 
 ---
 
 ## 🔗 API Endpoints
 
-### Authentication
+### 🔐 Authentication
 
-| Method | Endpoint             | Description                      |
-| ------ | -------------------- | -------------------------------- |
-| POST   | `/api/auth/register` | Register new user                |
-| POST   | `/api/auth/login`    | Login user                       |
-| GET    | `/api/protected`     | Protected route (requires token) |
-
-### Products (JSON Server)
-
-| Method | Endpoint        | Description        |
-| ------ | --------------- | ------------------ |
-| GET    | `/products`     | Get all products   |
-| GET    | `/products/:id` | Get single product |
+- **POST** `/api/auth/register` – Register new user
+- **POST** `/api/auth/login` – Login user
+- **GET** `/api/auth/profile` – Get logged-in user profile
 
 ---
 
-## 🔄 Application Architecture
+### 🛍️ Products
+
+- **GET** `/api/products`
+- **GET** `/api/products/:id`
+
+---
+
+### 📦 Orders
+
+- **POST** `/api/orders`
+- **GET** `/api/orders`
+
+---
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         FRONTEND                                 │
-│  ┌─────────┐  ┌──────────┐  ┌─────────┐  ┌──────────────────┐  │
-│  │ React   │──│  Context │──│  Axios  │──│ React Router DOM │  │
-│  │ Pages   │  │   API    │  │         │  │                  │  │
-│  └─────────┘  └──────────┘  └────┬────┘  └──────────────────┘  │
-└───────────────────────────────────┼─────────────────────────────┘
-                                    │ HTTP
-┌───────────────────────────────────┼─────────────────────────────┐
-│                         BACKEND   │                              │
-│  ┌─────────┐  ┌──────────┐  ┌────┴────┐  ┌──────────────────┐  │
-│  │ Express │──│  Routes  │──│  JWT    │──│    MongoDB       │  │
-│  │ Server  │  │          │  │ + Bcrypt│  │   (Mongoose)     │  │
-│  └─────────┘  └──────────┘  └─────────┘  └──────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
+## 🏗️ Application Architecture
+┌───────────────────────────────┐
+│           Frontend            │
+│  React.js + Context API       │
+└───────────────┬───────────────┘
+│
+▼
+Axios HTTP Requests
+│
+▼
+┌───────────────────────────────┐
+│            Backend            │
+│        Express.js REST API    │
+└───────────────┬───────────────┘
+│
+▼
+JWT Authentication
+(Middleware Layer)
+│
+▼
+┌───────────────────────────────┐
+│          Database             │
+│   MongoDB Atlas (Mongoose)    │
+└───────────────────────────────┘
 ```
 
 ---
-
----
-
-## 🖼️ Screenshots
 
 <table>
   <tr>
-    <td><img src="screenshots/Home.png" alt="Home Page" width="400"/></td>
-    <td><img src="screenshots/category.png" alt="Category Filter" width="400"/></td>
+    <td><img src="screenshots/Home.png" width="400"/></td>
+    <td><img src="screenshots/category.png" width="400"/></td>
   </tr>
   <tr>
-    <td align="center"><b>Home Page - Product Listing</b></td>
-    <td align="center"><b>Category Filtering</b></td>
+    <td align="center"><b>Home - Product Listing</b></td>
+    <td align="center"><b>Category Filter</b></td>
   </tr>
   <tr>
-    <td><img src="screenshots/product-detail.png" alt="Product Detail" width="400"/></td>
-    <td><img src="screenshots/cart.png" alt="Cart" width="400"/></td>
+    <td><img src="screenshots/product-detail.png" width="400"/></td>
+    <td><img src="screenshots/cart.png" width="400"/></td>
   </tr>
   <tr>
-    <td align="center"><b>Product Detail View</b></td>
+    <td align="center"><b>Product Detail</b></td>
     <td align="center"><b>Shopping Cart</b></td>
   </tr>
-  <tr>
-    <td><img src="screenshots/signin.png" alt="Sign In" width="400"/></td>
-    <td><img src="screenshots/signup.png" alt="Sign Up" width="400"/></td>
+    <tr>
+    <td><img src="screenshots/signin.png" width="400"/></td>
+    <td><img src="screenshots/signup.png" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><b>Sign In Page</b></td>
@@ -248,47 +228,33 @@ This single command starts:
 
 ---
 
-## 👨‍💻 Key Accomplishments
-
-- Built complete e-commerce frontend with React.js and component-based architecture
-- Implemented JWT-based authentication system with secure password hashing
-- Designed RESTful API with Express.js following best practices
-- Integrated MongoDB database with Mongoose ODM
-- Created responsive UI using Tailwind CSS (mobile-first approach)
-- Set up efficient development workflow with Vite and Concurrently
-
----
-
-## 📌 Future Roadmap
-
-- [ ] Payment gateway integration (Stripe/Razorpay)
-- [ ] Admin dashboard for product management
-- [ ] Order tracking system
-- [ ] Email notifications
-- [ ] Deploy on Vercel/Railway
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👤 Author
-
-**Krishna Yadav**
-
-- GitHub: [@Krishnayadav1908](https://github.com/Krishnayadav1908)
-
----
+### 🗄️ MongoDB Database (Atlas)
 
 <p align="center">
-  Made with ❤️ using React.js & Express.js
+  <img src="screenshots/mongodb.png" width="600"/>
 </p>
+
+<p align="center">
+  <b>Users & Orders Collection Stored in MongoDB Atlas</b>
+</p>
+
+---
+
+👨‍💻 Key Accomplishments
+
+    •	Built complete MERN stack application from scratch
+    •	Implemented secure authentication with JWT & Bcrypt
+    •	Designed RESTful APIs following best practices
+    •	Integrated MongoDB Atlas for persistent data storage
+    •	Created responsive mobile-first UI using Tailwind CSS
+    •	Successfully deployed full-stack project
+
+📄 License
+
+This project is licensed under the MIT License.
+
+👤 Author
+
+Krishna Yadav
+
+GitHub: https://github.com/Krishnayadav1908
