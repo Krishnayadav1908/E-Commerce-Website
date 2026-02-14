@@ -17,11 +17,13 @@ const { isValidEmail, validatePassword } = require('../utils/validation');
 
 const OTP_EXPIRY_MINUTES = 10;
 const OTP_MAX_ATTEMPTS = 5;
+const OTP_RESEND_COOLDOWN_SECONDS = Number(process.env.OTP_RESEND_COOLDOWN_SECONDS || 60);
+const OTP_LOCKOUT_MINUTES = Number(process.env.OTP_LOCKOUT_MINUTES || 15);
 
 const generateOtp = () => String(Math.floor(100000 + Math.random() * 900000));
 
 const sendOtpEmail = async (email, name, otp) => {
-  await sendEmail({
+  return sendEmail({
     to: email,
     subject: 'Verify your email - KrishCart',
     text: `Hello ${name || 'Customer'},\n\nYour verification code is: ${otp}\nThis code will expire in ${OTP_EXPIRY_MINUTES} minutes.\n\nIf you did not request this, please ignore this email.`,
@@ -30,6 +32,17 @@ const sendOtpEmail = async (email, name, otp) => {
     relatedId: email,
     meta: { channel: 'email' }
   });
+};
+
+const getLatestOtpRecord = async (email) => {
+  return EmailOtp.findOne({ email }).sort({ createdAt: -1 });
+};
+
+const getCooldownRemainingSeconds = (record) => {
+  if (!record?.createdAt) return 0;
+  const nextAllowed = record.createdAt.getTime() + OTP_RESEND_COOLDOWN_SECONDS * 1000;
+  const remainingMs = nextAllowed - Date.now();
+  return remainingMs > 0 ? Math.ceil(remainingMs / 1000) : 0;
 };
 
 // Register a new user
@@ -48,6 +61,23 @@ exports.register = async (req, res) => {
     const existingUser = await User.findOne({ email });
     if (existingUser && existingUser.isVerified) {
       return res.status(400).json({ message: 'Email already registered' });
+    }
+
+    const latestOtp = await getLatestOtpRecord(email);
+    if (latestOtp?.lockedUntil && latestOtp.lockedUntil > new Date()) {
+      const retryAfterSeconds = Math.ceil((latestOtp.lockedUntil.getTime() - Date.now()) / 1000);
+      return res.status(429).json({
+        message: 'OTP temporarily locked. Try again later.',
+        retryAfterSeconds
+      });
+    }
+
+    const cooldownRemaining = getCooldownRemainingSeconds(latestOtp);
+    if (cooldownRemaining > 0) {
+      return res.status(429).json({
+        message: 'Please wait before requesting another OTP',
+        retryAfterSeconds: cooldownRemaining
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -74,10 +104,17 @@ exports.register = async (req, res) => {
       expiresAt,
       attempts: 0,
       maxAttempts: OTP_MAX_ATTEMPTS,
-      consumedAt: null
+      consumedAt: null,
+      lockedUntil: null
     });
 
-    await sendOtpEmail(email, name, otp);
+    const emailResult = await sendOtpEmail(email, name, otp);
+    if (!emailResult?.success) {
+      return res.status(500).json({
+        message: 'Failed to send OTP email',
+        error: emailResult?.error || 'SMTP not configured'
+      });
+    }
 
     res.status(201).json({ message: 'OTP sent to email', requiresOtp: true, email });
   } catch (err) {
@@ -125,15 +162,34 @@ exports.verifyOtp = async (req, res) => {
       return res.status(400).json({ message: 'OTP expired' });
     }
 
+    if (record.lockedUntil && record.lockedUntil > new Date()) {
+      const retryAfterSeconds = Math.ceil((record.lockedUntil.getTime() - Date.now()) / 1000);
+      return res.status(429).json({
+        message: 'OTP temporarily locked. Try again later.',
+        retryAfterSeconds
+      });
+    }
+
     if (record.attempts >= record.maxAttempts) {
-      return res.status(400).json({ message: 'Max OTP attempts reached' });
+      return res.status(429).json({ message: 'Max OTP attempts reached' });
     }
 
     const isMatch = await bcrypt.compare(String(otp), record.otpHash);
-    record.attempts += 1;
-    await record.save();
-
     if (!isMatch) {
+      record.attempts += 1;
+      if (record.attempts >= record.maxAttempts) {
+        record.lockedUntil = new Date(Date.now() + OTP_LOCKOUT_MINUTES * 60 * 1000);
+      }
+      await record.save();
+
+      if (record.lockedUntil) {
+        const retryAfterSeconds = Math.ceil((record.lockedUntil.getTime() - Date.now()) / 1000);
+        return res.status(429).json({
+          message: 'OTP temporarily locked. Try again later.',
+          retryAfterSeconds
+        });
+      }
+
       return res.status(400).json({ message: 'Invalid OTP' });
     }
 
@@ -176,16 +232,40 @@ exports.resendOtp = async (req, res) => {
     const otpHash = await bcrypt.hash(otp, 10);
     const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
 
+    const latestOtp = await getLatestOtpRecord(email);
+    if (latestOtp?.lockedUntil && latestOtp.lockedUntil > new Date()) {
+      const retryAfterSeconds = Math.ceil((latestOtp.lockedUntil.getTime() - Date.now()) / 1000);
+      return res.status(429).json({
+        message: 'OTP temporarily locked. Try again later.',
+        retryAfterSeconds
+      });
+    }
+
+    const cooldownRemaining = getCooldownRemainingSeconds(latestOtp);
+    if (cooldownRemaining > 0) {
+      return res.status(429).json({
+        message: 'Please wait before requesting another OTP',
+        retryAfterSeconds: cooldownRemaining
+      });
+    }
+
     await EmailOtp.create({
       email,
       otpHash,
       expiresAt,
       attempts: 0,
       maxAttempts: OTP_MAX_ATTEMPTS,
-      consumedAt: null
+      consumedAt: null,
+      lockedUntil: null
     });
 
-    await sendOtpEmail(email, user.name, otp);
+    const emailResult = await sendOtpEmail(email, user.name, otp);
+    if (!emailResult?.success) {
+      return res.status(500).json({
+        message: 'Failed to resend OTP email',
+        error: emailResult?.error || 'SMTP not configured'
+      });
+    }
 
     res.json({ message: 'OTP resent' });
   } catch (err) {

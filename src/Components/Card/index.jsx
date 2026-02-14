@@ -41,6 +41,10 @@ const Card = ({ data }) => {
         <img
           src={data.image}
           alt={data.title}
+          loading="lazy"
+          decoding="async"
+          width={320}
+          height={224}
           onError={(e) => {
             // Hide broken image and show gray background instead
             e.target.style.display = "none";

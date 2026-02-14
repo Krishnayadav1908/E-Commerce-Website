@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Layout from "../../Components/Layout";
 import Card from "../../Components/Card";
 import ProductDetail from "../../Components/ProductDetail";
@@ -18,6 +18,12 @@ const CardSkeleton = () => (
 function Home() {
   const context = useContext(ShoppingCartContext);
   const productsRef = useRef(null);
+  const pageSize = 12;
+  const [visibleCount, setVisibleCount] = useState(pageSize);
+
+  useEffect(() => {
+    setVisibleCount(pageSize);
+  }, [context.searchByTitle, context.searchByCategory, context.items]);
 
   const renderView = () => {
     if (!context.items) {
@@ -26,10 +32,11 @@ function Home() {
       ));
     }
 
-    if (context.filteredItems?.length > 0) {
-      return context.filteredItems.map((item) => (
-        <Card key={item.id} data={item} />
-      ));
+    const sourceItems = context.filteredItems ?? context.items;
+    if (sourceItems?.length > 0) {
+      return sourceItems
+        .slice(0, visibleCount)
+        .map((item) => <Card key={item.id} data={item} />);
     }
 
     return (
@@ -42,7 +49,6 @@ function Home() {
     );
   };
 
-  console.log("ITEMS:", context.items);
   return (
     <Layout>
       {/* HERO BANNER */}
@@ -81,6 +87,11 @@ function Home() {
                 <img
                   src="https://images.unsplash.com/photo-1491933382434-500287f9b54b?w=800&q=80"
                   alt="Hero Banner"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                  width={800}
+                  height={600}
                   className="w-full h-full object-cover brightness-90"
                 />
               </div>
@@ -115,6 +126,19 @@ function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full max-w-7xl mx-auto px-4">
         {renderView()}
       </div>
+
+      {context.items &&
+        (context.filteredItems ?? context.items)?.length > visibleCount && (
+          <div className="flex justify-center mt-10">
+            <button
+              type="button"
+              onClick={() => setVisibleCount((prev) => prev + pageSize)}
+              className="rounded-full border border-black/10 px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 transition"
+            >
+              Load more
+            </button>
+          </div>
+        )}
 
       <ProductDetail />
     </Layout>

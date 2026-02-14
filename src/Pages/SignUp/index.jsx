@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCartContext } from "../../Context";
 import Layout from "../../Components/Layout";
@@ -17,6 +17,30 @@ function SignUp() {
   const [otp, setOtp] = useState("");
   const [otpEmail, setOtpEmail] = useState("");
   const [info, setInfo] = useState("");
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [otpLockout, setOtpLockout] = useState(0);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return undefined;
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => Math.max(prev - 1, 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
+
+  useEffect(() => {
+    if (otpLockout <= 0) return undefined;
+    const timer = setInterval(() => {
+      setOtpLockout((prev) => Math.max(prev - 1, 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [otpLockout]);
+
+  const formatSeconds = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+  };
 
   //(B)
   const handleSubmit = async (e) => {
@@ -63,6 +87,7 @@ function SignUp() {
       setOtpStep(true);
       setInfo("We sent a 6-digit OTP to your email.");
       setError("");
+      setResendCooldown(60);
     } else if (result?.success) {
       navigate("/my-account");
     } else {
@@ -76,6 +101,9 @@ function SignUp() {
     if (result?.success) {
       navigate("/my-account");
     } else {
+      if (result?.retryAfterSeconds) {
+        setOtpLockout(result.retryAfterSeconds);
+      }
       setError(result?.message || "OTP verification failed.");
     }
   };
@@ -85,7 +113,11 @@ function SignUp() {
     if (result?.success) {
       setInfo("OTP resent. Please check your email.");
       setError("");
+      setResendCooldown(60);
     } else {
+      if (result?.retryAfterSeconds) {
+        setResendCooldown(result.retryAfterSeconds);
+      }
       setError(result?.message || "Unable to resend OTP.");
     }
   };
@@ -95,6 +127,8 @@ function SignUp() {
     setOtp("");
     setInfo("");
     setError("");
+    setResendCooldown(0);
+    setOtpLockout(0);
   };
 
   const handleChange = (e) => {
@@ -140,10 +174,16 @@ function SignUp() {
 
               {info && <p className="text-green-600 text-sm">{info}</p>}
               {error && <p className="text-red-500 text-sm">{error}</p>}
+              {otpLockout > 0 && (
+                <p className="text-amber-600 text-sm">
+                  Try again in {formatSeconds(otpLockout)}.
+                </p>
+              )}
 
               <div className="flex items-center justify-between">
                 <button
                   type="submit"
+                  disabled={otpLockout > 0}
                   className="flex justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                 >
                   Verify OTP
@@ -152,9 +192,12 @@ function SignUp() {
                   <button
                     type="button"
                     onClick={handleResendOtp}
-                    className="text-sm font-semibold text-black hover:text-gray-800"
+                    disabled={resendCooldown > 0}
+                    className="text-sm font-semibold text-black hover:text-gray-800 disabled:cursor-not-allowed disabled:text-gray-400"
                   >
-                    Resend OTP
+                    {resendCooldown > 0
+                      ? `Resend in ${formatSeconds(resendCooldown)}`
+                      : "Resend OTP"}
                   </button>
                   <button
                     type="button"

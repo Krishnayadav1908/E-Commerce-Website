@@ -11,11 +11,15 @@ const buildTransporter = () => {
     return null;
   }
 
+  const enableDebug = String(process.env.SMTP_DEBUG || '').toLowerCase() === 'true';
+
   return nodemailer.createTransport({
     host,
     port,
     secure: port === 465,
-    auth: { user, pass }
+    auth: { user, pass },
+    logger: enableDebug,
+    debug: enableDebug
   });
 };
 
@@ -29,6 +33,7 @@ const sendEmail = async ({ to, subject, text, html, type, relatedId, meta, retry
 
   if (!transporter) {
     errorMessage = 'SMTP not configured';
+    console.warn('[email] SMTP not configured');
   } else {
     try {
       const info = await transporter.sendMail({
@@ -43,6 +48,7 @@ const sendEmail = async ({ to, subject, text, html, type, relatedId, meta, retry
     } catch (error) {
       status = 'failed';
       errorMessage = error.message;
+      console.error('[email] Send failed:', error.message);
     }
   }
 

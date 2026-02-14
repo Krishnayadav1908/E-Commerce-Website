@@ -152,7 +152,8 @@ export const ShoppingCartProvider = ({ children }) => {
       console.error("OTP verification failed:", error);
       const message =
         error?.response?.data?.message || "OTP verification failed";
-      return { success: false, message };
+      const retryAfterSeconds = error?.response?.data?.retryAfterSeconds;
+      return { success: false, message, retryAfterSeconds };
     }
   };
 
@@ -163,7 +164,8 @@ export const ShoppingCartProvider = ({ children }) => {
     } catch (error) {
       console.error("Resend OTP failed:", error);
       const message = error?.response?.data?.message || "Resend OTP failed";
-      return { success: false, message };
+      const retryAfterSeconds = error?.response?.data?.retryAfterSeconds;
+      return { success: false, message, retryAfterSeconds };
     }
   };
 

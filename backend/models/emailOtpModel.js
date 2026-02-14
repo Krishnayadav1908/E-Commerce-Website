@@ -7,7 +7,8 @@ const emailOtpSchema = new mongoose.Schema(
     expiresAt: { type: Date, required: true },
     attempts: { type: Number, default: 0 },
     maxAttempts: { type: Number, default: 5 },
-    consumedAt: { type: Date, default: null }
+    consumedAt: { type: Date, default: null },
+    lockedUntil: { type: Date, default: null }
   },
   { timestamps: true }
 );
