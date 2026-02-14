@@ -1,6 +1,12 @@
 import { createContext, useState, useEffect, useMemo } from "react";
 import api, { authApi } from "../services/api";
-import { loginUser, registerUser, getUserProfile } from "../services/api";
+import {
+  loginUser,
+  registerUser,
+  getUserProfile,
+  verifyEmailOtp,
+  resendEmailOtp,
+} from "../services/api";
 
 export const ShoppingCartContext = createContext();
 
@@ -22,6 +28,7 @@ export const ShoppingCartProvider = ({ children }) => {
   const [count, setCount] = useState(0);
   const [cartProducts, setCartProducts] = useState([]);
   const [order, setOrder] = useState([]);
+  const [wishlistItems, setWishlistItems] = useState([]);
 
   // UI State
   const [isProductDetailOpen, setIsProductDetailOpen] = useState(false);
@@ -50,10 +57,15 @@ export const ShoppingCartProvider = ({ children }) => {
     const loadUserSession = () => {
       const savedAccount = localStorage.getItem("account");
       const savedIsAuth = localStorage.getItem("isUserAuthenticated");
+      const savedWishlist = localStorage.getItem("wishlistItems");
 
       if (savedAccount && savedIsAuth === "true") {
         setAccount(JSON.parse(savedAccount));
         setIsUserAuthenticated(true);
+      }
+
+      if (savedWishlist) {
+        setWishlistItems(JSON.parse(savedWishlist));
       }
 
       setIsLoading(false);
@@ -61,6 +73,10 @@ export const ShoppingCartProvider = ({ children }) => {
 
     loadUserSession();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("wishlistItems", JSON.stringify(wishlistItems));
+  }, [wishlistItems]);
 
   // No localStorage for orders: always use backend
 
@@ -91,36 +107,63 @@ export const ShoppingCartProvider = ({ children }) => {
         localStorage.removeItem("pendingCart");
       }
 
-      return true;
+      return { success: true };
     } catch (error) {
       console.error("Login failed:", error);
-      return false;
+      const message = error?.response?.data?.message || "Login failed";
+      return { success: false, message };
     }
   };
   // Authentication methods(B)
   const handleSignUp = async (name, email, password) => {
     try {
       const response = await registerUser(name, email, password);
+      return {
+        success: true,
+        requiresOtp: response.data?.requiresOtp,
+        email: response.data?.email || email,
+      };
+    } catch (error) {
+      console.error("Registration failed:", error);
+      const message = error?.response?.data?.message || "Registration failed";
+      return { success: false, message };
+    }
+  };
+
+  const handleVerifyOtp = async (email, otp) => {
+    try {
+      const response = await verifyEmailOtp(email, otp);
       const { token } = response.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("isUserAuthenticated", "true");
 
-      // Fetch user profile (with _id)
       const profileRes = await getUserProfile(token);
       const user = profileRes.data;
       setAccount(user);
       localStorage.setItem("account", JSON.stringify(user));
       setIsUserAuthenticated(true);
 
-      // Clear previous orders from local state and localStorage
       setOrder([]);
       localStorage.removeItem("order");
 
-      return true;
+      return { success: true };
     } catch (error) {
-      console.error("Registration failed:", error);
-      return false;
+      console.error("OTP verification failed:", error);
+      const message =
+        error?.response?.data?.message || "OTP verification failed";
+      return { success: false, message };
+    }
+  };
+
+  const handleResendOtp = async (email) => {
+    try {
+      await resendEmailOtp(email);
+      return { success: true };
+    } catch (error) {
+      console.error("Resend OTP failed:", error);
+      const message = error?.response?.data?.message || "Resend OTP failed";
+      return { success: false, message };
     }
   };
 
@@ -189,6 +232,30 @@ export const ShoppingCartProvider = ({ children }) => {
     setCount((prev) => prev - 1);
   };
 
+  const addToWishlist = (product) => {
+    setWishlistItems((prev) => {
+      if (prev.some((item) => item.id === product.id)) {
+        return prev;
+      }
+      return [...prev, product];
+    });
+  };
+
+  const removeFromWishlist = (id) => {
+    setWishlistItems((prev) => prev.filter((product) => product.id !== id));
+  };
+
+  const isInWishlist = (id) =>
+    wishlistItems.some((product) => product.id === id);
+
+  const toggleWishlist = (product) => {
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
+  };
+
   const contextValue = {
     // Cart
     count,
@@ -199,6 +266,11 @@ export const ShoppingCartProvider = ({ children }) => {
     removeFromCart,
     order,
     setOrder,
+    wishlistItems,
+    addToWishlist,
+    removeFromWishlist,
+    toggleWishlist,
+    isInWishlist,
 
     // UI
     isProductDetailOpen,
@@ -221,9 +293,12 @@ export const ShoppingCartProvider = ({ children }) => {
 
     // User
     account,
+    setAccount,
     isUserAuthenticated,
     handleSignIn,
     handleSignUp,
+    handleVerifyOtp,
+    handleResendOtp,
     handleSignOut,
     fetchUserOrders,
   };

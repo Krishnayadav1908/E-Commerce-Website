@@ -16,6 +16,9 @@ const CheckoutPage = () => {
     zip: "",
     phone: "",
   });
+  const [upiRef, setUpiRef] = useState("");
+  const [paymentNote, setPaymentNote] = useState("");
+  const upiId = import.meta.env.VITE_UPI_ID || "krishcart@upi";
 
   return (
     <Layout>
@@ -138,7 +141,13 @@ const CheckoutPage = () => {
                 className="border p-2 rounded"
               />
             </form>
-            <h2 className="font-medium text-lg mb-2">Payment</h2>
+            <h2 className="font-medium text-lg mb-2">Payment (UPI)</h2>
+            <div className="text-sm text-gray-600">
+              Pay to <span className="font-semibold text-black">{upiId}</span>
+              <div className="text-xs text-gray-500">
+                Click Pay Now to complete payment and place your order.
+              </div>
+            </div>
             <button
               className="bg-green-600 text-white px-4 py-2 rounded mt-4 w-full disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={
@@ -154,12 +163,6 @@ const CheckoutPage = () => {
                   alert("Add a product to cart!");
                   return;
                 }
-                // Debug log for account and _id
-                console.log("DEBUG: context.account =", context.account);
-                console.log(
-                  "DEBUG: context.account._id =",
-                  context.account?._id,
-                );
                 if (!context.account || !context.account._id) {
                   alert("User not logged in!");
                   return;
@@ -173,11 +176,15 @@ const CheckoutPage = () => {
                     totalProducts: context.cartProducts.length,
                     date: new Date().toLocaleString(),
                     address,
+                    paymentMethod: "upi",
+                    paymentStatus: "paid",
+                    paymentRef: upiRef,
+                    paymentNotes: paymentNote,
                   };
                   await authApi.post("/order/create", orderData, {
                     headers: { Authorization: `Bearer ${token}` },
                   });
-                  alert("Order placed successfully!");
+                  alert("Payment successful! Order placed.");
                   context.fetchUserOrders(context.account._id, token);
                   context.setCartProducts([]);
                 } catch (err) {

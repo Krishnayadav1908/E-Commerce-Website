@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   ShoppingCartIcon,
+  HeartIcon,
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/solid"; // Heroicons imports
@@ -143,6 +144,18 @@ const Navbar = () => {
                   My Account
                 </NavLink>
               </li>
+              {context.account?.role === "admin" && (
+                <li className="hidden md:block">
+                  <NavLink
+                    to="/admin"
+                    className={({ isActive }) =>
+                      isActive ? activeStyle : undefined
+                    }
+                  >
+                    Admin
+                  </NavLink>
+                </li>
+              )}
               <li className="hidden md:block">
                 <button onClick={handleSignOut} className="hover:text-gray-500">
                   Sign Out
@@ -169,6 +182,16 @@ const Navbar = () => {
             <span className="md:hidden text-sm text-black/60 truncate max-w-[120px]">
               {context.account?.email}
             </span>
+          )}
+
+          {/* Shopping cart button */}
+          {context.isUserAuthenticated && (
+            <NavLink to="/wishlist" className="relative flex items-center">
+              <HeartIcon className="h-6 w-6 text-black hover:text-gray-700" />
+              <div className="absolute -top-2 -right-2 flex justify-center items-center bg-black text-white rounded-full w-5 h-5 text-xs">
+                {context.wishlistItems?.length || 0}
+              </div>
+            </NavLink>
           )}
 
           {/* Shopping cart button */}
@@ -319,6 +342,19 @@ const Navbar = () => {
                       My Account
                     </NavLink>
                   </li>
+                  {context.account?.role === "admin" && (
+                    <li>
+                      <NavLink
+                        to="/admin"
+                        onClick={toggleMenu}
+                        className={({ isActive }) =>
+                          `block text-lg font-semibold ${isActive ? activeStyle : ""}`
+                        }
+                      >
+                        Admin
+                      </NavLink>
+                    </li>
+                  )}
                   <li>
                     <button
                       onClick={handleSignOut}

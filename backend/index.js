@@ -30,6 +30,10 @@ app.use('/api/payment', paymentRoutes);
 const orderRoutes = require('./routes/order');
 app.use('/api/order', orderRoutes);
 
+// Admin routes
+const adminRoutes = require('./routes/admin');
+app.use('/api/admin', adminRoutes);
+
 // Public endpoint to get Stripe Public Key for frontend
 app.get('/api/stripe-public-key', (req, res) => {
   res.json({ key: process.env.STRIPE_PUBLIC_KEY });

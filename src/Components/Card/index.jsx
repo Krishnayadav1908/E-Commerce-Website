@@ -1,22 +1,31 @@
-import { useContext } from 'react'
-import { PlusIcon } from '@heroicons/react/24/solid'
-import { ShoppingCartContext } from '../../Context'
+import { useContext } from "react";
+import {
+  PlusIcon,
+  HeartIcon as HeartIconSolid,
+} from "@heroicons/react/24/solid";
+import { HeartIcon as HeartIconOutline } from "@heroicons/react/24/outline";
+import { ShoppingCartContext } from "../../Context";
 
 const Card = ({ data }) => {
-  const context = useContext(ShoppingCartContext)
+  const context = useContext(ShoppingCartContext);
 
   const showProduct = () => {
-    context.openProductDetail()
-    context.setProductToShow(data)
-  }
+    context.openProductDetail();
+    context.setProductToShow(data);
+  };
 
   const addProductsToCart = (event, productData) => {
-    event.stopPropagation()
-    context.setCartProducts([...context.cartProducts, productData])
-    context.setCount(context.count + 1)
-    context.openCheckoutSideMenu()
-    context.closeProductDetail()
-  }
+    event.stopPropagation();
+    context.setCartProducts([...context.cartProducts, productData]);
+    context.setCount(context.count + 1);
+    context.openCheckoutSideMenu();
+    context.closeProductDetail();
+  };
+
+  const toggleWishlist = (event, productData) => {
+    event.stopPropagation();
+    context.toggleWishlist(productData);
+  };
 
   return (
     <div
@@ -26,19 +35,30 @@ const Card = ({ data }) => {
       {/* Image */}
       <figure className="relative h-56 w-full overflow-hidden rounded-t-2xl bg-gray-100">
         <span className="absolute bottom-3 left-3 bg-gradient-to-r from-teal-600 to-teal-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
-  {data.category}
-</span>
+          {data.category}
+        </span>
 
-      <img
-        src={data.image}
-        alt={data.title}
-        onError={(e) => {
-          // Hide broken image and show gray background instead
-          e.target.style.display = 'none'
-          e.target.parentElement.style.backgroundColor = '#e5e7eb'
-        }}
-        className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
-      />
+        <img
+          src={data.image}
+          alt={data.title}
+          onError={(e) => {
+            // Hide broken image and show gray background instead
+            e.target.style.display = "none";
+            e.target.parentElement.style.backgroundColor = "#e5e7eb";
+          }}
+          className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+
+        <button
+          className="absolute top-3 left-3 flex items-center justify-center w-9 h-9 rounded-full bg-white/90 text-teal-700 hover:scale-110 hover:bg-white transition-all duration-300 shadow-lg"
+          onClick={(event) => toggleWishlist(event, data)}
+        >
+          {context.isInWishlist(data.id) ? (
+            <HeartIconSolid className="h-5 w-5" />
+          ) : (
+            <HeartIconOutline className="h-5 w-5" />
+          )}
+        </button>
 
         <button
           className="absolute top-3 right-3 flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-r from-black to-teal-900 text-white hover:scale-110 hover:from-teal-600 hover:to-teal-500 transition-all duration-300 shadow-lg"
@@ -59,7 +79,7 @@ const Card = ({ data }) => {
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Card
+export default Card;

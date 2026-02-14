@@ -5,6 +5,7 @@ import MyAccount from "../MyAccount";
 import MyOrder from "../MyOrder";
 import OrderDetail from "../OrderDetail";
 import MyOrders from "../MyOrders";
+import Wishlist from "../Wishlist";
 import NotFound from "../NotFound";
 import SignIn from "../SignIn";
 import SignUp from "../SignUp";
@@ -13,6 +14,13 @@ import CheckoutSideMenu from "../../Components/CheckoutSideMenu";
 import ProtectedRoute from "../../Components/ProtectedRoute";
 import CartSummary from "../../Components/CartSummary";
 import CheckoutPage from "../Checkout";
+import AdminDashboard from "../AdminDashboard";
+import AdminOrders from "../AdminOrders";
+import AdminUsers from "../AdminUsers";
+import AdminProducts from "../AdminProducts";
+import AdminAudit from "../AdminAudit";
+import AdminAnalytics from "../AdminAnalytics";
+import AdminRoute from "../../Components/AdminRoute";
 import "./App.css";
 
 const AppRoutes = () => {
@@ -25,6 +33,54 @@ const AppRoutes = () => {
     { path: "/others", element: <Home /> },
     { path: "/cart-summary", element: <CartSummary /> },
     { path: "/checkout", element: <CheckoutPage /> },
+    {
+      path: "/admin",
+      element: (
+        <AdminRoute>
+          <AdminDashboard />
+        </AdminRoute>
+      ),
+    },
+    {
+      path: "/admin/orders",
+      element: (
+        <AdminRoute>
+          <AdminOrders />
+        </AdminRoute>
+      ),
+    },
+    {
+      path: "/admin/users",
+      element: (
+        <AdminRoute>
+          <AdminUsers />
+        </AdminRoute>
+      ),
+    },
+    {
+      path: "/admin/products",
+      element: (
+        <AdminRoute>
+          <AdminProducts />
+        </AdminRoute>
+      ),
+    },
+    {
+      path: "/admin/audit",
+      element: (
+        <AdminRoute>
+          <AdminAudit />
+        </AdminRoute>
+      ),
+    },
+    {
+      path: "/admin/analytics",
+      element: (
+        <AdminRoute>
+          <AdminAnalytics />
+        </AdminRoute>
+      ),
+    },
     {
       path: "/my-account",
       element: (
@@ -46,6 +102,14 @@ const AppRoutes = () => {
       element: (
         <ProtectedRoute>
           <MyOrders />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/wishlist",
+      element: (
+        <ProtectedRoute>
+          <Wishlist />
         </ProtectedRoute>
       ),
     },

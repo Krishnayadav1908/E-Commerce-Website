@@ -7,10 +7,15 @@ const orderSchema = new mongoose.Schema({
   totalProducts: { type: Number, required: true },
   date: { type: String, required: true },
   status: { type: String, default: 'pending' },
+  paymentMethod: { type: String, default: 'upi' },
+  paymentStatus: { type: String, default: 'pending' },
+  paymentRef: { type: String, default: '' },
+  paymentNotes: { type: String, default: '' },
+  paymentVerifiedAt: { type: Date, default: null },
   address: {
     type: Object,
     default: {},
   },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema);

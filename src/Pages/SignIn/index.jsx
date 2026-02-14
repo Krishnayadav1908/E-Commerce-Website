@@ -13,11 +13,11 @@ function SignIn() {
   //(B)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = await context.handleSignIn(email, password);
-    if (success) {
+    const result = await context.handleSignIn(email, password);
+    if (result?.success) {
       navigate("/");
     } else {
-      setError("Invalid credentials");
+      setError(result?.message || "Invalid credentials");
     }
   };
 
