@@ -34,6 +34,9 @@ export const verifyEmailOtp = (email, otp) =>
 export const resendEmailOtp = (email) =>
   authApi.post('/auth/resend-otp', { email })
 
+export const getProducts = (params) =>
+  authApi.get('/products', { params })
+
 export const getAdminStats = (token) =>
   authApi.get('/admin/stats', { headers: { Authorization: `Bearer ${token}` } })
 

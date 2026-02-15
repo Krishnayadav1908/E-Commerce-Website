@@ -34,6 +34,9 @@ All data is persisted in MongoDB Atlas and the application is fully deployed on 
 - 🗄️ MongoDB Atlas Integration
 - 📱 Fully Responsive UI
 - ☁️ Full Deployment on Render
+- 📈 Performance & SEO Audit Page
+- 🛡️ Security Hardening (Helmet + Rate Limit)
+- ✅ CI Pipeline (Lint + Build + Tests)
 
 ---
 
@@ -126,9 +129,12 @@ Create .env file inside the backend/ folder:
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
 PORT=3000
+SENTRY_DSN=your_sentry_dsn (optional)
 
 Create .env inside react-ecommerce/:
 VITE_API_URL=http://localhost:3000
+VITE_SENTRY_DSN=your_sentry_dsn (optional)
+VITE_SENTRY_TRACES_SAMPLE_RATE=0.1 (optional)
 
 ### 4️⃣ Run Application
 
@@ -164,7 +170,14 @@ Backend → http://localhost:3000
 ### 🛍️ Products
 
 - **GET** `/api/products`
+- **GET** `/api/products?page=1&limit=12`
+- **GET** `/api/products?search=phone&category=electronics`
+- **GET** `/api/products?minPrice=500&maxPrice=2500`
 - **GET** `/api/products/:id`
+
+### 🩺 Health
+
+- **GET** `/api/health`
 
 ---
 
@@ -200,6 +213,21 @@ JWT Authentication
 │          Database             │
 │   MongoDB Atlas (Mongoose)    │
 └───────────────────────────────┘
+
+---
+
+## 📊 Performance & SEO
+
+Visit `/performance` to view the audit summary and notes. Replace the sample metrics with your latest Lighthouse results.
+
+---
+
+## 🔐 Security & Monitoring
+
+- Helmet headers enabled
+- Auth rate limiting for login/register/OTP
+- Optional Sentry error tracking (backend `SENTRY_DSN`, frontend `VITE_SENTRY_DSN`)
+- Health endpoint for uptime checks
 ```
 
 ---

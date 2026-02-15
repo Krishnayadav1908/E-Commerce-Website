@@ -1,6 +1,7 @@
-import { createContext, useState, useEffect, useMemo } from "react";
-import api, { authApi } from "../services/api";
+import { createContext, useState, useEffect } from "react";
+import { authApi } from "../services/api";
 import {
+  getProducts,
   loginUser,
   registerUser,
   getUserProfile,
@@ -38,9 +39,12 @@ export const ShoppingCartProvider = ({ children }) => {
 
   // Products State
   const [items, setItems] = useState(null);
-  const [filteredItems, setFilteredItems] = useState(null);
+  const [productsPage, setProductsPage] = useState(1);
+  const [productsHasMore, setProductsHasMore] = useState(true);
+  const [productsLoading, setProductsLoading] = useState(false);
   const [searchByTitle, setSearchByTitle] = useState(null);
   const [searchByCategory, setSearchByCategory] = useState(null);
+  const productsPageSize = 12;
 
   // User State
   const [account, setAccount] = useState(null);
@@ -187,40 +191,51 @@ export const ShoppingCartProvider = ({ children }) => {
     closeCheckoutSideMenu();
   };
 
-  // Fetch products using Axios + JSON Server
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await api.get("/");
-        setItems(response.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
+  const buildProductParams = (page) => ({
+    page,
+    limit: productsPageSize,
+    search: searchByTitle?.trim() || undefined,
+    category: searchByCategory || undefined,
+  });
+
+  const fetchProducts = async ({ page = 1, replace = false } = {}) => {
+    if (replace) {
+      setItems(null);
+    }
+    setProductsLoading(true);
+    try {
+      const response = await getProducts(buildProductParams(page));
+      const nextItems = response.data?.items || [];
+      setItems((prev) =>
+        replace ? nextItems : [...(prev || []), ...nextItems],
+      );
+      setProductsHasMore(Boolean(response.data?.hasMore));
+      setProductsPage(page);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      if (replace) {
         setItems([]);
+      } else {
+        setItems((prev) => prev || []);
       }
-    };
+      setProductsHasMore(false);
+    } finally {
+      setProductsLoading(false);
+    }
+  };
 
-    fetchProducts();
-  }, []);
+  const fetchMoreProducts = () => {
+    if (productsLoading || !productsHasMore) return;
+    fetchProducts({ page: productsPage + 1, replace: false });
+  };
 
-  // Memoized filter functions
-  const filteredItemsByTitle = useMemo(() => {
-    if (!searchByTitle || !items) return items;
-    return items.filter((item) =>
-      item.title.toLowerCase().includes(searchByTitle.toLowerCase()),
-    );
-  }, [items, searchByTitle]);
-
-  const filteredItemsByCategory = useMemo(() => {
-    if (!searchByCategory || !items) return filteredItemsByTitle;
-    return filteredItemsByTitle?.filter((item) =>
-      item.category.toLowerCase().includes(searchByCategory.toLowerCase()),
-    );
-  }, [filteredItemsByTitle, searchByCategory]);
-
-  // Update filtered items when filters change
   useEffect(() => {
-    setFilteredItems(filteredItemsByCategory);
-  }, [filteredItemsByCategory]);
+    const timeout = setTimeout(() => {
+      fetchProducts({ page: 1, replace: true });
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [searchByTitle, searchByCategory]);
 
   // Cart methods
   const addToCart = (product) => {
@@ -287,7 +302,9 @@ export const ShoppingCartProvider = ({ children }) => {
 
     // Products
     items,
-    filteredItems,
+    productsHasMore,
+    productsLoading,
+    fetchMoreProducts,
     searchByTitle,
     setSearchByTitle,
     searchByCategory,

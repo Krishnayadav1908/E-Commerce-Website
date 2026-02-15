@@ -1,27 +1,30 @@
+import { Suspense, lazy } from "react";
 import { useRoutes, BrowserRouter } from "react-router-dom";
 import { ShoppingCartProvider } from "../../Context";
-import Home from "../Home";
-import MyAccount from "../MyAccount";
-import MyOrder from "../MyOrder";
-import OrderDetail from "../OrderDetail";
-import MyOrders from "../MyOrders";
-import Wishlist from "../Wishlist";
-import NotFound from "../NotFound";
-import SignIn from "../SignIn";
-import SignUp from "../SignUp";
 import Navbar from "../../Components/Navbar";
 import CheckoutSideMenu from "../../Components/CheckoutSideMenu";
 import ProtectedRoute from "../../Components/ProtectedRoute";
-import CartSummary from "../../Components/CartSummary";
-import CheckoutPage from "../Checkout";
-import AdminDashboard from "../AdminDashboard";
-import AdminOrders from "../AdminOrders";
-import AdminUsers from "../AdminUsers";
-import AdminProducts from "../AdminProducts";
-import AdminAudit from "../AdminAudit";
-import AdminAnalytics from "../AdminAnalytics";
 import AdminRoute from "../../Components/AdminRoute";
 import "./App.css";
+
+const Home = lazy(() => import("../Home"));
+const MyAccount = lazy(() => import("../MyAccount"));
+const MyOrder = lazy(() => import("../MyOrder"));
+const OrderDetail = lazy(() => import("../OrderDetail"));
+const MyOrders = lazy(() => import("../MyOrders"));
+const Wishlist = lazy(() => import("../Wishlist"));
+const NotFound = lazy(() => import("../NotFound"));
+const SignIn = lazy(() => import("../SignIn"));
+const SignUp = lazy(() => import("../SignUp"));
+const CartSummary = lazy(() => import("../../Components/CartSummary"));
+const CheckoutPage = lazy(() => import("../Checkout"));
+const AdminDashboard = lazy(() => import("../AdminDashboard"));
+const AdminOrders = lazy(() => import("../AdminOrders"));
+const AdminUsers = lazy(() => import("../AdminUsers"));
+const AdminProducts = lazy(() => import("../AdminProducts"));
+const AdminAudit = lazy(() => import("../AdminAudit"));
+const AdminAnalytics = lazy(() => import("../AdminAnalytics"));
+const Performance = lazy(() => import("../Performance"));
 
 const AppRoutes = () => {
   let routes = useRoutes([
@@ -33,6 +36,7 @@ const AppRoutes = () => {
     { path: "/others", element: <Home /> },
     { path: "/cart-summary", element: <CartSummary /> },
     { path: "/checkout", element: <CheckoutPage /> },
+    { path: "/performance", element: <Performance /> },
     {
       path: "/admin",
       element: (
@@ -140,7 +144,15 @@ const App = () => {
   return (
     <ShoppingCartProvider>
       <BrowserRouter>
-        <AppRoutes />
+        <Suspense
+          fallback={
+            <div className="flex min-h-screen items-center justify-center text-gray-500">
+              Loading...
+            </div>
+          }
+        >
+          <AppRoutes />
+        </Suspense>
         <Navbar />
         <CheckoutSideMenu />
       </BrowserRouter>

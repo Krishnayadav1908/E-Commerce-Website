@@ -113,6 +113,16 @@ const Navbar = () => {
                 Others
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/performance"
+                className={({ isActive }) =>
+                  isActive ? activeStyle : undefined
+                }
+              >
+                Performance
+              </NavLink>
+            </li>
           </ul>
         </div>
 
@@ -311,6 +321,17 @@ const Navbar = () => {
                     }
                   >
                     Others
+                  </NavLink>
+                </li>
+                <li className="px-4 py-2">
+                  <NavLink
+                    to="/performance"
+                    onClick={toggleMenu}
+                    className={({ isActive }) =>
+                      `block text-lg ${isActive ? activeStyle : ""}`
+                    }
+                  >
+                    Performance
                   </NavLink>
                 </li>
               </ul>

@@ -3,10 +3,16 @@ const path = require('path');
 
 require('dotenv').config({ path: path.join(__dirname, '.env') }); // Load .env from backend folder
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI,)
-.then(() => {
-  console.log('Connected to MongoDB');
-}).catch((err) => {
-  console.error('Error connecting to MongoDB:', err);
-});
+if (process.env.NODE_ENV !== 'test') {
+  if (!process.env.MONGODB_URI) {
+    console.warn('MONGODB_URI is not set. Skipping database connection.');
+  } else {
+    // Connect to MongoDB
+    mongoose.connect(process.env.MONGODB_URI)
+    .then(() => {
+      console.log('Connected to MongoDB');
+    }).catch((err) => {
+      console.error('Error connecting to MongoDB:', err);
+    });
+  }
+}

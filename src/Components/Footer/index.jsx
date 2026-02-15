@@ -60,6 +60,11 @@ const Footer = () => {
                 Sign In
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/performance" className="hover:text-white transition">
+                Performance
+              </NavLink>
+            </li>
           </ul>
         </div>
 

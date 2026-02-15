@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import Layout from "../../Components/Layout";
 import Card from "../../Components/Card";
 import ProductDetail from "../../Components/ProductDetail";
@@ -18,12 +18,34 @@ const CardSkeleton = () => (
 function Home() {
   const context = useContext(ShoppingCartContext);
   const productsRef = useRef(null);
-  const pageSize = 12;
-  const [visibleCount, setVisibleCount] = useState(pageSize);
+  const loadMoreRef = useRef(null);
 
   useEffect(() => {
-    setVisibleCount(pageSize);
-  }, [context.searchByTitle, context.searchByCategory, context.items]);
+    const target = loadMoreRef.current;
+    if (!target) return undefined;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (
+          entry.isIntersecting &&
+          context.productsHasMore &&
+          !context.productsLoading
+        ) {
+          context.fetchMoreProducts();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+
+    observer.observe(target);
+
+    return () => observer.unobserve(target);
+  }, [
+    context.productsHasMore,
+    context.productsLoading,
+    context.fetchMoreProducts,
+  ]);
 
   const renderView = () => {
     if (!context.items) {
@@ -32,11 +54,8 @@ function Home() {
       ));
     }
 
-    const sourceItems = context.filteredItems ?? context.items;
-    if (sourceItems?.length > 0) {
-      return sourceItems
-        .slice(0, visibleCount)
-        .map((item) => <Card key={item.id} data={item} />);
+    if (context.items?.length > 0) {
+      return context.items.map((item) => <Card key={item.id} data={item} />);
     }
 
     return (
@@ -127,18 +146,20 @@ function Home() {
         {renderView()}
       </div>
 
-      {context.items &&
-        (context.filteredItems ?? context.items)?.length > visibleCount && (
-          <div className="flex justify-center mt-10">
-            <button
-              type="button"
-              onClick={() => setVisibleCount((prev) => prev + pageSize)}
-              className="rounded-full border border-black/10 px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 transition"
-            >
-              Load more
-            </button>
-          </div>
-        )}
+      <div ref={loadMoreRef} className="h-6" aria-hidden="true" />
+
+      {context.items && context.productsHasMore && (
+        <div className="flex justify-center mt-10">
+          <button
+            type="button"
+            onClick={context.fetchMoreProducts}
+            disabled={context.productsLoading}
+            className="rounded-full border border-black/10 px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 transition disabled:cursor-not-allowed disabled:text-gray-400"
+          >
+            {context.productsLoading ? "Loading..." : "Load more"}
+          </button>
+        </div>
+      )}
 
       <ProductDetail />
     </Layout>
