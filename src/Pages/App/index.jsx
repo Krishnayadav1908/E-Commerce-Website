@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import { useRoutes, BrowserRouter } from "react-router-dom";
 import { ShoppingCartProvider } from "../../Context";
+import { ToastProvider } from "../../Components/Toast";
 import Navbar from "../../Components/Navbar";
 import CheckoutSideMenu from "../../Components/CheckoutSideMenu";
 import ProtectedRoute from "../../Components/ProtectedRoute";
@@ -143,19 +144,21 @@ const AppRoutes = () => {
 const App = () => {
   return (
     <ShoppingCartProvider>
-      <BrowserRouter>
-        <Suspense
-          fallback={
-            <div className="flex min-h-screen items-center justify-center text-gray-500">
-              Loading...
-            </div>
-          }
-        >
-          <AppRoutes />
-        </Suspense>
-        <Navbar />
-        <CheckoutSideMenu />
-      </BrowserRouter>
+      <ToastProvider>
+        <BrowserRouter>
+          <Suspense
+            fallback={
+              <div className="flex min-h-screen items-center justify-center text-gray-500">
+                Loading...
+              </div>
+            }
+          >
+            <AppRoutes />
+          </Suspense>
+          <Navbar />
+          <CheckoutSideMenu />
+        </BrowserRouter>
+      </ToastProvider>
     </ShoppingCartProvider>
   );
 };

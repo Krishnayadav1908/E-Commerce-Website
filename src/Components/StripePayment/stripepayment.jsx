@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import StripeCheckoutForm from "./StripeCheckoutForm";
+import { useToast } from "../Toast";
 
 const StripePayment = ({ amount }) => {
   const [stripePromise, setStripePromise] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const { addToast } = useToast();
 
   const handleStartPayment = async () => {
     // Fetch Stripe public key from backend
@@ -26,7 +28,11 @@ const StripePayment = ({ amount }) => {
     });
     const data = await res.json();
     if (!data.clientSecret) {
-      alert("Payment intent creation failed");
+      addToast({
+        title: "Payment failed",
+        message: "Unable to create payment intent.",
+        variant: "error",
+      });
       return;
     }
     setClientSecret(data.clientSecret);

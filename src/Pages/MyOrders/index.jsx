@@ -15,25 +15,36 @@ function MyOrders() {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] py-12">
-        <div className="flex items-center justify-center relative w-80 mb-8">
-          <h1 className="font-medium text-xl">My Orders</h1>
+      <div className="w-full max-w-7xl mx-auto px-4 py-12">
+        <div className="mb-12">
+          <h1 className="text-4xl font-bold tracking-tight">My Orders</h1>
+          <p className="text-sm text-gray-500 mt-2">
+            Track your orders and view details
+          </p>
         </div>
-        <div className="flex flex-col items-center">
-          {context.order && context.order.length > 0 ? (
-            context.order.map((order, index) => (
+
+        {context.order && context.order.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {context.order.map((order, index) => (
               <Link key={order._id || index} to={`/my-orders/${index}`}>
                 <OrdersCard
                   totalPrice={order.totalPrice}
                   totalProducts={order.totalProducts}
                   date={order.date}
+                  status={order.status}
+                  paymentStatus={order.paymentStatus}
                 />
               </Link>
-            ))
-          ) : (
-            <p className="text-gray-500">No orders yet</p>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl bg-white shadow-sm p-12 text-center text-gray-500">
+            <p className="text-lg">No orders yet</p>
+            <p className="text-sm mt-2">
+              Start shopping to place your first order
+            </p>
+          </div>
+        )}
       </div>
     </Layout>
   );

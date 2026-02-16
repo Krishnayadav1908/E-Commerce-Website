@@ -10,6 +10,40 @@ import StripePayment from "../StripePayment/stripepayment";
 const CartSummary = () => {
   const context = useContext(ShoppingCartContext);
   const navigate = useNavigate();
+  const groupedItems = context.cartProducts.reduce((acc, product) => {
+    const key = product?._id || product?.id;
+    if (!key) return acc;
+    if (!acc[key]) {
+      acc[key] = { product, quantity: 0 };
+    }
+    acc[key].quantity += 1;
+    return acc;
+  }, {});
+
+  const handleIncrease = (product) => {
+    const next = [...context.cartProducts, product];
+    context.setCartProducts(next);
+    context.setCount(next.length);
+  };
+
+  const handleDecrease = (productId) => {
+    const index = context.cartProducts.findIndex(
+      (item) => (item?._id || item?.id) === productId,
+    );
+    if (index === -1) return;
+    const next = [...context.cartProducts];
+    next.splice(index, 1);
+    context.setCartProducts(next);
+    context.setCount(next.length);
+  };
+
+  const handleRemoveAll = (productId) => {
+    const next = context.cartProducts.filter(
+      (item) => (item?._id || item?.id) !== productId,
+    );
+    context.setCartProducts(next);
+    context.setCount(next.length);
+  };
   return (
     <Layout>
       <div className="flex flex-col items-center min-h-[calc(100vh-80px)] py-10 px-4 bg-gray-50">
@@ -36,13 +70,21 @@ const CartSummary = () => {
                   Your cart is empty.
                 </div>
               ) : (
-                context.cartProducts.map((product) => (
+                Object.values(groupedItems).map(({ product, quantity }) => (
                   <OrderCard
-                    key={product.id}
-                    id={product.id}
+                    key={product._id || product.id}
+                    id={product._id || product.id}
                     title={product.title}
                     imageUrl={product.image}
                     price={product.price}
+                    subtotal={product.price * quantity}
+                    quantity={quantity}
+                    onIncrease={() => handleIncrease(product)}
+                    onDecrease={() => handleDecrease(product._id || product.id)}
+                    handleDelete={() =>
+                      handleRemoveAll(product._id || product.id)
+                    }
+                    showRemoveLabel
                   />
                 ))
               )}

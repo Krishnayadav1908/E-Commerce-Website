@@ -5,9 +5,11 @@ import Layout from "../../Components/Layout";
 import { totalPrice } from "../../utils";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import api, { authApi } from "../../services/api";
+import { useToast } from "../../Components/Toast";
 const CheckoutPage = () => {
   const context = useContext(ShoppingCartContext);
   const navigate = useNavigate();
+  const { addToast } = useToast();
   const [address, setAddress] = useState({
     name: "",
     street: "",
@@ -148,6 +150,27 @@ const CheckoutPage = () => {
                 Click Pay Now to complete payment and place your order.
               </div>
             </div>
+            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-xs text-gray-600">
+              <p className="text-[11px] font-semibold uppercase text-gray-400">
+                Order summary
+              </p>
+              <div className="mt-2 space-y-1">
+                <p className="text-gray-700">
+                  {address.name || "Name"}
+                  {address.city ? `, ${address.city}` : ""}
+                </p>
+                <p className="text-gray-500">
+                  {address.street || "Street"}
+                  {address.state ? `, ${address.state}` : ""}
+                  {address.zip ? ` ${address.zip}` : ""}
+                </p>
+                <p className="text-gray-500">{address.phone || "Phone"}</p>
+                <div className="flex items-center justify-between text-gray-600">
+                  <span>Payment</span>
+                  <span className="font-semibold text-gray-800">UPI</span>
+                </div>
+              </div>
+            </div>
             <button
               className="bg-green-600 text-white px-4 py-2 rounded mt-4 w-full disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={
@@ -160,11 +183,19 @@ const CheckoutPage = () => {
               }
               onClick={async () => {
                 if (context.cartProducts.length === 0) {
-                  alert("Add a product to cart!");
+                  addToast({
+                    title: "Cart is empty",
+                    message: "Add at least one product before checkout.",
+                    variant: "warning",
+                  });
                   return;
                 }
                 if (!context.account || !context.account._id) {
-                  alert("User not logged in!");
+                  addToast({
+                    title: "Sign in required",
+                    message: "Please sign in to place your order.",
+                    variant: "error",
+                  });
                   return;
                 }
                 try {
@@ -184,14 +215,19 @@ const CheckoutPage = () => {
                   await authApi.post("/order/create", orderData, {
                     headers: { Authorization: `Bearer ${token}` },
                   });
-                  alert("Payment successful! Order placed.");
+                  addToast({
+                    title: "Payment successful",
+                    message: "Your order has been placed.",
+                    variant: "success",
+                  });
                   context.fetchUserOrders(context.account._id, token);
                   context.setCartProducts([]);
                 } catch (err) {
-                  alert(
-                    "Order failed: " +
-                      (err?.response?.data?.error || err.message),
-                  );
+                  addToast({
+                    title: "Order failed",
+                    message: err?.response?.data?.error || err.message,
+                    variant: "error",
+                  });
                 }
               }}
             >

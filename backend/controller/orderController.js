@@ -3,6 +3,7 @@ const Product = require('../models/productModel');
 const User = require('../models/userModels');
 const { sendEmail } = require('../utils/email');
 const { isValidEmail } = require('../utils/validation');
+const { generateInvoicePDF, generateInvoiceNumber } = require('../utils/invoice');
 
 // Create a new order (with stock deduction)
 exports.createOrder = async (req, res) => {
@@ -105,9 +106,61 @@ exports.createOrder = async (req, res) => {
 exports.getUserOrders = async (req, res) => {
   try {
     const { userId } = req.params;
-    const orders = await Order.find({ userId });
+    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
     res.status(200).json(orders);
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Download order invoice as PDF
+exports.downloadInvoice = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { userId } = req.query;
+
+    // Verify order exists and belongs to user
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    if (userId && order.userId.toString() !== userId) {
+      return res.status(403).json({ error: 'Unauthorized to access this order' });
+    }
+
+    // Generate invoice number if not already generated
+    let invoiceNumber = order.invoiceNumber;
+    if (!invoiceNumber) {
+      invoiceNumber = generateInvoiceNumber();
+      order.invoiceNumber = invoiceNumber;
+      order.invoiceGeneratedAt = new Date();
+      await order.save();
+    }
+
+    // Generate PDF
+    const pdfStream = generateInvoicePDF(order, invoiceNumber);
+
+    // Set response headers for PDF download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="invoice-${invoiceNumber}.pdf"`
+    );
+
+    // Stream PDF to response
+    pdfStream.pipe(res);
+
+    // Handle stream errors
+    pdfStream.on('error', (err) => {
+      console.error('PDF generation error:', err);
+      if (!res.headersSent) {
+        res.status(500).json({ error: 'Failed to generate PDF' });
+      }
+    });
+
+  } catch (error) {
+    console.error('Invoice download error:', error);
     res.status(500).json({ error: error.message });
   }
 };

@@ -5,18 +5,23 @@ import { ShoppingCartContext } from "../../Context";
 import { authApi } from "../../services/api";
 import OrderCard from "../OrderCard";
 import { totalPrice } from "../../utils";
+import { useToast } from "../Toast";
 import "./styles.css";
 // StripePayment removed
 
 const CheckoutSideMenu = () => {
   const context = useContext(ShoppingCartContext);
   const navigate = useNavigate();
+  const { addToast } = useToast();
+
+  const getItemKey = (product) => product?._id || product?.id;
 
   const handleDelete = (id) => {
-    const filteredProducts = context.cartProducts.filter(
-      (product) => product.id != id,
-    );
-    context.setCartProducts(filteredProducts);
+    context.setCartProducts((prev) => {
+      const next = prev.filter((product) => getItemKey(product) !== id);
+      context.setCount(next.length);
+      return next;
+    });
   };
 
   const handleViewCart = () => {
@@ -54,8 +59,8 @@ const CheckoutSideMenu = () => {
         <div className="flex-1 overflow-y-auto px-6">
           {context.cartProducts.map((product) => (
             <OrderCard
-              key={product.id}
-              id={product.id}
+              key={getItemKey(product)}
+              id={getItemKey(product)}
               title={product.title}
               imageUrl={product.image || product.images}
               price={product.price}
@@ -76,46 +81,6 @@ const CheckoutSideMenu = () => {
             onClick={handleViewCart}
           >
             View Cart
-          </button>
-        </div>
-        <div className="px-6 py-4 border-t border-gray-200">
-          <button
-            className="bg-green-600 text-white px-4 py-2 rounded mt-4 w-full"
-            onClick={async () => {
-              if (context.cartProducts.length === 0) {
-                alert("Add a product to cart!");
-                return;
-              }
-              if (!context.account || !context.account._id) {
-                alert("User not logged in!");
-                return;
-              }
-              try {
-                const token = localStorage.getItem("token");
-                const orderData = {
-                  userId: context.account._id,
-                  products: context.cartProducts,
-                  totalPrice: totalPrice(context.cartProducts),
-                  totalProducts: context.cartProducts.length,
-                  date: new Date().toLocaleString(),
-                  address: {}, // No address in side menu
-                };
-                await authApi.post("/order/create", orderData, {
-                  headers: { Authorization: `Bearer ${token}` },
-                });
-                alert("Order placed successfully!");
-                await context.fetchUserOrders(context.account._id, token);
-                context.setCartProducts([]);
-                context.closeCheckoutSideMenu();
-              } catch (err) {
-                alert(
-                  "Order failed: " +
-                    (err?.response?.data?.error || err.message),
-                );
-              }
-            }}
-          >
-            Pay Now
           </button>
         </div>
       </aside>

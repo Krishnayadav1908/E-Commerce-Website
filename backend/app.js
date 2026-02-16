@@ -11,13 +11,20 @@ const app = express();
 
 app.set('trust proxy', 1);  
 
-if (process.env.SENTRY_DSN) {
+const sentryDsn = process.env.SENTRY_DSN;
+const isValidSentryDsn = sentryDsn && sentryDsn !== 'your_backend_sentry_dsn';
+
+if (isValidSentryDsn) {
   Sentry.init({
-    dsn: process.env.SENTRY_DSN,
+    dsn: sentryDsn,
     environment: process.env.NODE_ENV || 'development',
     tracesSampleRate: Number(process.env.SENTRY_TRACES_SAMPLE_RATE || 0)
   });
-  app.use(Sentry.Handlers.requestHandler());
+
+  const sentryRequestHandler = Sentry.Handlers?.requestHandler?.();
+  if (sentryRequestHandler) {
+    app.use(sentryRequestHandler);
+  }
 }
 
 app.use(helmet());
@@ -59,8 +66,11 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-if (process.env.SENTRY_DSN) {
-  app.use(Sentry.Handlers.errorHandler());
+if (isValidSentryDsn) {
+  const sentryErrorHandler = Sentry.Handlers?.errorHandler?.();
+  if (sentryErrorHandler) {
+    app.use(sentryErrorHandler);
+  }
 }
 
 // Fallback error handler

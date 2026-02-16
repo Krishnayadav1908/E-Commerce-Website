@@ -7,12 +7,69 @@ function OrderDetail() {
   const { index } = useParams();
   const context = useContext(ShoppingCartContext);
   const [order, setOrder] = useState(null);
+  const [downloading, setDownloading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
+
+  useEffect(() => {
+    let isActive = true;
+
+    const loadOrdersIfNeeded = async () => {
+      if (context.order && context.order.length > 0) {
+        if (isActive) setIsFetching(false);
+        return;
+      }
+
+      if (!context.isUserAuthenticated) {
+        if (isActive) setIsFetching(false);
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+      const storedAccount = localStorage.getItem("account");
+      const parsedAccount = storedAccount ? JSON.parse(storedAccount) : null;
+      const userId = context?.account?._id || parsedAccount?._id;
+
+      if (userId && token) {
+        await context.fetchUserOrders(userId, token);
+      }
+
+      if (isActive) setIsFetching(false);
+    };
+
+    loadOrdersIfNeeded();
+
+    return () => {
+      isActive = false;
+    };
+  }, [
+    context.order,
+    context.account?._id,
+    context.isUserAuthenticated,
+    context.fetchUserOrders,
+  ]);
 
   useEffect(() => {
     if (context.order && context.order.length > 0) {
-      setOrder(context.order[index]);
+      const orderIndex = Number(index);
+      const selectedOrder = Number.isFinite(orderIndex)
+        ? context.order[orderIndex]
+        : null;
+      setOrder(selectedOrder || null);
+    } else {
+      setOrder(null);
     }
   }, [context.order, index]);
+
+  if (isFetching) {
+    return (
+      <Layout>
+        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] py-12">
+          <h1 className="font-medium text-xl mb-4">Order Details</h1>
+          <p className="text-gray-500">Loading order...</p>
+        </div>
+      </Layout>
+    );
+  }
 
   if (!order) {
     return (
@@ -25,10 +82,58 @@ function OrderDetail() {
     );
   }
 
+  const handleDownloadInvoice = async () => {
+    try {
+      setDownloading(true);
+      const storedAccount = localStorage.getItem("account");
+      const parsedAccount = storedAccount ? JSON.parse(storedAccount) : null;
+      const userId = context?.account?._id || parsedAccount?._id || "";
+      const token = localStorage.getItem("token");
+
+      const query = userId ? `?userId=${userId}` : "";
+      const response = await fetch(`/api/order/${order?._id}/invoice${query}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to download invoice");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `invoice-${order?._id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      context?.showToast?.("Invoice downloaded successfully", "success");
+    } catch (error) {
+      console.error("Invoice download error:", error);
+      context?.showToast?.("Failed to download invoice", "error");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <Layout>
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] py-12">
-        <h1 className="font-medium text-xl mb-4">Order Details</h1>
+        <div className="flex w-full max-w-2xl items-center justify-between mb-4">
+          <h1 className="font-medium text-xl">Order Details</h1>
+          <button
+            onClick={handleDownloadInvoice}
+            disabled={downloading}
+            className="rounded-lg bg-teal-600 px-3 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:bg-gray-400"
+          >
+            {downloading ? "Downloading..." : "Download Invoice"}
+          </button>
+        </div>
         <div className="bg-white rounded-lg shadow p-6 w-full max-w-2xl">
           <div className="mb-4">
             <span className="font-semibold">Order Date:</span> {order.date}

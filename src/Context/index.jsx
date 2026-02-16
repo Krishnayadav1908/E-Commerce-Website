@@ -20,7 +20,20 @@ export const ShoppingCartProvider = ({ children }) => {
       const response = await authApi.get(`/order/user/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setOrder(response.data);
+      const sortedOrders = (response.data || []).slice().sort((a, b) => {
+        const aTime = a?.createdAt
+          ? new Date(a.createdAt).getTime()
+          : a?.date
+            ? new Date(a.date).getTime()
+            : 0;
+        const bTime = b?.createdAt
+          ? new Date(b.createdAt).getTime()
+          : b?.date
+            ? new Date(b.date).getTime()
+            : 0;
+        return bTime - aTime;
+      });
+      setOrder(sortedOrders);
     } catch (error) {
       console.error("Error fetching user orders:", error);
     }

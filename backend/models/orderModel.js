@@ -16,6 +16,12 @@ const orderSchema = new mongoose.Schema({
     type: Object,
     default: {},
   },
+  invoiceNumber: { type: String, default: '' },
+  invoiceGeneratedAt: { type: Date, default: null },
 }, { timestamps: true });
+
+// Index for faster queries
+orderSchema.index({ userId: 1, createdAt: -1 });
+orderSchema.index({ invoiceNumber: 1 });
 
 module.exports = mongoose.model('Order', orderSchema);
