@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import Layout from "../../Components/Layout";
 import Card from "../../Components/Card";
 import ProductDetail from "../../Components/ProductDetail";
@@ -19,6 +20,26 @@ function Home() {
   const context = useContext(ShoppingCartContext);
   const productsRef = useRef(null);
   const loadMoreRef = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname.toLowerCase();
+    const categoryMap = {
+      "/clothes": "clothes",
+      "/electronics": "electronics",
+      "/furnitures": "furniture",
+      "/toys": "toy",
+      "/others": "others",
+    };
+    const nextCategory = categoryMap[path] || null;
+    if (context.searchByCategory !== nextCategory) {
+      context.setSearchByCategory(nextCategory);
+    }
+  }, [
+    location.pathname,
+    context.searchByCategory,
+    context.setSearchByCategory,
+  ]);
 
   useEffect(() => {
     const target = loadMoreRef.current;
@@ -55,7 +76,9 @@ function Home() {
     }
 
     if (context.items?.length > 0) {
-      return context.items.map((item) => <Card key={item.id} data={item} />);
+      return context.items.map((item) => (
+        <Card key={item._id || item.id} data={item} />
+      ));
     }
 
     return (
@@ -108,7 +131,7 @@ function Home() {
                   alt="Hero Banner"
                   loading="eager"
                   decoding="async"
-                  fetchPriority="high"
+                  fetchpriority="high"
                   width={800}
                   height={600}
                   className="w-full h-full object-cover brightness-90"
