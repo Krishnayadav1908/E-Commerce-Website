@@ -27,15 +27,25 @@ All data is persisted in MongoDB Atlas and the application is fully deployed on 
 ## ✨ Features
 
 - 🔐 JWT-based Authentication (Register / Login)
+- 📧 Email OTP Verification (SMTP)
 - 👤 Secure User Profile Route
 - 🛍️ Product Listing & Product Details
-- 🛒 Add to Cart & Checkout (Fake Payment Flow)
+- 🗂️ Category Filter
+- 🛒 Add to Cart & Cart Summary
+- ❤️ Wishlist
+- 💳 Checkout (Fake Payment Flow)
 - 📦 Order Creation & Order History
+- 🧾 Invoice Bill Download (PDF)
 - 🗄️ MongoDB Atlas Integration
-- 📱 Fully Responsive UI
+- 🧑‍💼 Admin Dashboard (Analytics, Orders, Products, Users, Audit)
+- 📊 Admin Analytics & Revenue Charts
+- ⚠️ Low Stock Alert (Admin)
+- 📱 Fully Responsive UI (Mobile/Desktop)
 - ☁️ Full Deployment on Render
 - 📈 Performance & SEO Audit Page
 - 🛡️ Security Hardening (Helmet + Rate Limit)
+- 🩺 Health Endpoint for Uptime
+- 🛠️ Sentry Monitoring (optional)
 - ✅ CI Pipeline (Lint + Build + Tests)
 
 ---
@@ -125,16 +135,34 @@ npm install
 
 ### 3️⃣ Environment Variables
 
-Create .env file inside the backend/ folder:
+Create `.env` file inside the `backend/` folder:
+
+```
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
 PORT=3000
 SENTRY_DSN=your_sentry_dsn (optional)
 
-Create .env inside react-ecommerce/:
+# SMTP Email Configuration (for OTP, notifications, etc.)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_password
+SMTP_FROM="KrishCart <your_email@gmail.com>"
+SMTP_DEBUG=false
+OTP_RESEND_COOLDOWN_SECONDS=60
+OTP_LOCKOUT_MINUTES=15
+```
+
+> **Note:** For Gmail, you must use an App Password (not your normal password). Enable 2FA in your Google account and generate an App Password for SMTP.
+
+Create `.env` inside `react-ecommerce/`:
+
+```
 VITE_API_URL=http://localhost:3000
 VITE_SENTRY_DSN=your_sentry_dsn (optional)
 VITE_SENTRY_TRACES_SAMPLE_RATE=0.1 (optional)
+```
 
 ### 4️⃣ Run Application
 
@@ -145,6 +173,11 @@ cd backend
 node index.js
 ```
 
+> **Troubleshooting SMTP:**
+>
+> - Render and most free cloud hosts block SMTP ports. For local testing, SMTP will work. For production, use a VPS or a transactional email API (Mailgun, Resend, etc.).
+> - If you get connection timeout or authentication errors, check your SMTP credentials and network restrictions.
+
 #### ▶ Start Frontend
 
 ```bash
@@ -154,6 +187,8 @@ npm run dev
 
 Frontend → http://localhost:5173  
 Backend → http://localhost:3000
+
+> **Note:** Due to SMTP port restrictions on Render, the Email/OTP feature will not work in the live demo. This feature is fully functional when running locally or on a VPS (Virtual Private Server). For a complete demo of email/OTP, please run the backend on your local machine or a VPS.
 
 ---
 
@@ -249,13 +284,45 @@ Visit `/performance` to view the audit summary and notes. Replace the sample met
     <td align="center"><b>Product Detail</b></td>
     <td align="center"><b>Shopping Cart</b></td>
   </tr>
-    <tr>
+  <tr>
     <td><img src="screenshots/signin.png" width="400"/></td>
     <td><img src="screenshots/signup.png" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><b>Sign In Page</b></td>
     <td align="center"><b>Sign Up Page</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/orderHistory.png" width="400"/></td>
+    <td><img src="screenshots/wishlist.png" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Order History</b></td>
+    <td align="center"><b>Wishlist</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/orderDetail.png" width="400"/></td>
+    <td><img src="screenshots/invoice.png" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>invoice download button</b></td>
+    <td align="center"><b>Invoice Download</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/stockManage.png" width="400"/></td>
+    <td><img src="screenshots/analytics.png" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Stock Manage</b></td>
+    <td align="center"><b>Admin Analytics</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/stockAleart.png" width="400"/></td>
+    <td><img src="screenshots/mobile.png" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Low Stock Alert</b></td>
+    <td align="center"><b>Mobile View</b></td>
   </tr>
 </table>
 
@@ -264,7 +331,7 @@ Visit `/performance` to view the audit summary and notes. Replace the sample met
 ### 🗄️ MongoDB Database (Atlas)
 
 <p align="center">
-  <img src="screenshots/db.png" width="600"/>
+  <img src="screenshots/mongodb.png" width="600"/>
 </p>
 
 <p align="center">
@@ -275,12 +342,17 @@ Visit `/performance` to view the audit summary and notes. Replace the sample met
 
 👨‍💻 Key Accomplishments
 
-    •	Built complete MERN stack application from scratch
-    •	Implemented secure authentication with JWT & Bcrypt
-    •	Designed RESTful APIs following best practices
-    •	Integrated MongoDB Atlas for persistent data storage
-    •	Created responsive mobile-first UI using Tailwind CSS
-    •	Successfully deployed full-stack project
+- Built complete MERN stack application from scratch
+- Implemented secure authentication with JWT & Bcrypt
+- Designed RESTful APIs following best practices
+- Integrated MongoDB Atlas for persistent data storage
+- Created responsive mobile-first UI using Tailwind CSS
+- Implemented email OTP verification using SMTP
+- Developed admin dashboard with analytics, revenue charts, and low stock alerts
+- Added wishlist, order history, and invoice bill download (PDF) features for users
+- Applied security best practices (Helmet, rate limiting)
+- Added health endpoint and Sentry monitoring for reliability
+- Successfully deployed full-stack project
 
 📄 License
 

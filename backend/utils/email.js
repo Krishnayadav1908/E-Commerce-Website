@@ -30,6 +30,7 @@ const sendEmail = async ({ to, subject, text, html, type, relatedId, meta, retry
   let status = 'skipped';
   let errorMessage = '';
   let messageId = '';
+  let provider = 'nodemailer';
 
   if (!transporter) {
     errorMessage = 'SMTP not configured';
@@ -44,9 +45,11 @@ const sendEmail = async ({ to, subject, text, html, type, relatedId, meta, retry
         html
       });
       status = 'success';
+      provider = 'nodemailer';
       messageId = info.messageId || '';
     } catch (error) {
       status = 'failed';
+      provider = 'nodemailer';
       errorMessage = error.message;
       console.error('[email] Send failed:', error.message);
     }
@@ -64,7 +67,7 @@ const sendEmail = async ({ to, subject, text, html, type, relatedId, meta, retry
       type: type || '',
       relatedId: relatedId || '',
       meta: meta || {},
-      provider: 'nodemailer',
+      provider,
       retryOf: retryOf || null
     });
   } catch (logError) {
