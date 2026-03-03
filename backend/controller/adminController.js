@@ -20,10 +20,13 @@ exports.getStats = async (req, res) => {
     const totalRevenue = revenueAgg?.[0]?.totalRevenue || 0;
 
     const recentOrders = await Order.find()
-      .sort({ _id: -1 })
+      .select('_id status totalPrice date paymentStatus')
+      .sort({ createdAt: -1 })
       .limit(5)
-      .populate('userId', 'name email');
+      .populate('userId', 'name email')
+      .lean();
 
+    res.set('Cache-Control', 'public, max-age=300');
     res.json({
       usersCount,
       ordersCount,
@@ -38,13 +41,29 @@ exports.getStats = async (req, res) => {
 
 exports.getOrders = async (req, res) => {
   try {
-    const limit = Number(req.query.limit) || 0;
-    const orders = await Order.find()
-      .sort({ _id: -1 })
-      .limit(limit)
-      .populate('userId', 'name email');
+    const page = Math.max(Number(req.query.page) || 1, 1);
+    const limit = Math.max(Number(req.query.limit) || 20, 1);
+    const skip = (page - 1) * limit;
+    
+    const [orders, total] = await Promise.all([
+      Order.find()
+        .select('_id userId totalPrice date status paymentStatus invoiceNumber')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .populate('userId', 'name email')
+        .lean(),
+      Order.countDocuments()
+    ]);
 
-    res.json(orders);
+    res.set('Cache-Control', 'public, max-age=60');
+    res.json({
+      orders,
+      total,
+      page,
+      limit,
+      hasMore: skip + orders.length < total
+    });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -52,8 +71,28 @@ exports.getOrders = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find().select('-password');
-    res.json(users);
+    const page = Math.max(Number(req.query.page) || 1, 1);
+    const limit = Math.max(Number(req.query.limit) || 50, 1);
+    const skip = (page - 1) * limit;
+    
+    const [users, total] = await Promise.all([
+      User.find()
+        .select('-password')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      User.countDocuments()
+    ]);
+    
+    res.set('Cache-Control', 'public, max-age=300');
+    res.json({
+      users,
+      total,
+      page,
+      limit,
+      hasMore: skip + users.length < total
+    });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -61,8 +100,28 @@ exports.getUsers = async (req, res) => {
 
 exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
-    res.json(products);
+    const page = Math.max(Number(req.query.page) || 1, 1);
+    const limit = Math.max(Number(req.query.limit) || 50, 1);
+    const skip = (page - 1) * limit;
+    
+    const [products, total] = await Promise.all([
+      Product.find()
+        .select('id title price category stock')
+        .skip(skip)
+        .limit(limit)
+        .sort({ id: 1 })
+        .lean(),
+      Product.countDocuments()
+    ]);
+    
+    res.set('Cache-Control', 'public, max-age=300');
+    res.json({
+      products,
+      total,
+      page,
+      limit,
+      hasMore: skip + products.length < total
+    });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -72,8 +131,12 @@ exports.getLowStockProducts = async (req, res) => {
   try {
     const threshold = Number(req.query.threshold) || 10;
     const products = await Product.find({ stock: { $lt: threshold } })
-      .sort({ stock: 1 });
+      .select('id title category stock price')
+      .sort({ stock: 1 })
+      .limit(100)
+      .lean();
 
+    res.set('Cache-Control', 'public, max-age=300');
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -220,13 +283,29 @@ exports.updateUserRole = async (req, res) => {
 
 exports.getAuditLogs = async (req, res) => {
   try {
-    const limit = Number(req.query.limit) || 50;
-    const logs = await AdminActivity.find()
-      .sort({ createdAt: -1 })
-      .limit(limit)
-      .populate('actor', 'name email');
+    const page = Math.max(Number(req.query.page) || 1, 1);
+    const limit = Math.max(Number(req.query.limit) || 50, 1);
+    const skip = (page - 1) * limit;
+    
+    const [logs, total] = await Promise.all([
+      AdminActivity.find()
+        .select('action actor targetType targetId meta createdAt')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .populate('actor', 'name email')
+        .lean(),
+      AdminActivity.countDocuments()
+    ]);
 
-    res.json(logs);
+    res.set('Cache-Control', 'private, max-age=60');
+    res.json({
+      logs,
+      total,
+      page,
+      limit,
+      hasMore: skip + logs.length < total
+    });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -234,7 +313,9 @@ exports.getAuditLogs = async (req, res) => {
 
 exports.getEmailLogs = async (req, res) => {
   try {
-    const limit = Number(req.query.limit) || 50;
+    const page = Math.max(Number(req.query.page) || 1, 1);
+    const limit = Math.max(Number(req.query.limit) || 50, 1);
+    const skip = (page - 1) * limit;
     const status = req.query.status;
     const type = req.query.type;
     const query = {};
@@ -242,11 +323,24 @@ exports.getEmailLogs = async (req, res) => {
     if (status) query.status = status;
     if (type) query.type = type;
 
-    const logs = await EmailLog.find(query)
-      .sort({ createdAt: -1 })
-      .limit(limit);
+    const [logs, total] = await Promise.all([
+      EmailLog.find(query)
+        .select('to subject status error type messageId createdAt')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      EmailLog.countDocuments(query)
+    ]);
 
-    res.json(logs);
+    res.set('Cache-Control', 'private, max-age=60');
+    res.json({
+      logs,
+      total,
+      page,
+      limit,
+      hasMore: skip + logs.length < total
+    });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -398,6 +492,7 @@ exports.getRevenueTrend = async (req, res) => {
       { $sort: { _id: 1 } }
     ]);
 
+    res.set('Cache-Control', 'public, max-age=3600');
     res.json(trend);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -428,6 +523,7 @@ exports.getTopProducts = async (req, res) => {
       }
     ]);
 
+    res.set('Cache-Control', 'public, max-age=3600');
     res.json(topProducts);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -453,6 +549,7 @@ exports.getCategoryBreakdown = async (req, res) => {
       }
     ]);
 
+    res.set('Cache-Control', 'public, max-age=3600');
     res.json(breakdown);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -465,30 +562,68 @@ exports.getAnalyticsSummary = async (req, res) => {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
-    const orders = await Order.find({ createdAt: { $gte: startDate } });
-    
-    const totalRevenue = orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
-    const totalOrders = orders.length;
-    const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-    const totalProducts = orders.reduce((sum, order) => sum + (order.totalProducts || 0), 0);
-
-    // Calculate day-over-day growth (vs previous period)
     const previousStartDate = new Date(startDate);
     previousStartDate.setDate(previousStartDate.getDate() - days);
-    const previousOrders = await Order.find({
-      createdAt: { $gte: previousStartDate, $lt: startDate }
-    });
-    const previousRevenue = previousOrders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+
+    // Use MongoDB aggregation for better performance
+    const [currentData] = await Promise.all([
+      Order.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: startDate }
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            totalRevenue: { $sum: '$totalPrice' },
+            totalOrders: { $sum: 1 },
+            totalProductsSold: { $sum: '$totalProducts' }
+          }
+        }
+      ]),
+      Order.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: previousStartDate, $lt: startDate }
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            totalRevenue: { $sum: '$totalPrice' }
+          }
+        }
+      ])
+    ]);
+
+    const current = currentData[0] || { totalRevenue: 0, totalOrders: 0, totalProductsSold: 0 };
+    const previousResult = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: previousStartDate, $lt: startDate }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: '$totalPrice' }
+        }
+      }
+    ]);
+
+    const previousRevenue = previousResult[0]?.totalRevenue || 0;
     const revenueGrowth = previousRevenue > 0 
-      ? ((totalRevenue - previousRevenue) / previousRevenue * 100).toFixed(2)
+      ? ((current.totalRevenue - previousRevenue) / previousRevenue * 100).toFixed(2)
       : '0.00';
 
+    res.set('Cache-Control', 'public, max-age=3600');
     res.json({
       period: `Last ${days} days`,
-      totalRevenue: Math.round(totalRevenue),
-      totalOrders,
-      averageOrderValue: Math.round(averageOrderValue),
-      totalProductsSold: totalProducts,
+      totalRevenue: Math.round(current.totalRevenue),
+      totalOrders: current.totalOrders,
+      averageOrderValue: current.totalOrders > 0 ? Math.round(current.totalRevenue / current.totalOrders) : 0,
+      totalProductsSold: current.totalProductsSold,
       revenueGrowth: parseFloat(revenueGrowth)
     });
   } catch (err) {

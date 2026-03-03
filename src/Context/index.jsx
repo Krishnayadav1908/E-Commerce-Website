@@ -7,6 +7,7 @@ import {
   getUserProfile,
   verifyEmailOtp,
   resendEmailOtp,
+  logoutUser,
 } from "../services/api";
 
 export const ShoppingCartContext = createContext();
@@ -63,6 +64,19 @@ export const ShoppingCartProvider = ({ children }) => {
   const [account, setAccount] = useState(null);
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
 
+  const clearSession = () => {
+    setIsUserAuthenticated(false);
+    setAccount(null);
+    setOrder([]);
+    setCartProducts([]);
+    setCount(0);
+    localStorage.setItem("isUserAuthenticated", "false");
+    localStorage.removeItem("token");
+    localStorage.removeItem("account");
+    localStorage.removeItem("order");
+    localStorage.removeItem("pendingCart");
+  };
+
   // UI Actions
   const openProductDetail = () => setIsProductDetailOpen(true);
   const closeProductDetail = () => setIsProductDetailOpen(false);
@@ -71,14 +85,24 @@ export const ShoppingCartProvider = ({ children }) => {
 
   // Initialize user session
   useEffect(() => {
-    const loadUserSession = () => {
+    const loadUserSession = async () => {
       const savedAccount = localStorage.getItem("account");
       const savedIsAuth = localStorage.getItem("isUserAuthenticated");
       const savedWishlist = localStorage.getItem("wishlistItems");
+      const token = localStorage.getItem("token");
 
-      if (savedAccount && savedIsAuth === "true") {
-        setAccount(JSON.parse(savedAccount));
-        setIsUserAuthenticated(true);
+      if (savedAccount && savedIsAuth === "true" && token) {
+        try {
+          const profileRes = await getUserProfile(token);
+          const user = profileRes.data;
+          setAccount(user);
+          setIsUserAuthenticated(true);
+          localStorage.setItem("account", JSON.stringify(user));
+        } catch (error) {
+          clearSession();
+        }
+      } else {
+        clearSession();
       }
 
       if (savedWishlist) {
@@ -89,6 +113,16 @@ export const ShoppingCartProvider = ({ children }) => {
     };
 
     loadUserSession();
+  }, []);
+
+  useEffect(() => {
+    const onUnauthorized = () => {
+      clearSession();
+    };
+
+    window.addEventListener("auth:unauthorized", onUnauthorized);
+    return () =>
+      window.removeEventListener("auth:unauthorized", onUnauthorized);
   }, []);
 
   useEffect(() => {
@@ -124,7 +158,7 @@ export const ShoppingCartProvider = ({ children }) => {
         localStorage.removeItem("pendingCart");
       }
 
-      return { success: true };
+      return { success: true, user };
     } catch (error) {
       console.error("Login failed:", error);
       const message = error?.response?.data?.message || "Login failed";
@@ -186,18 +220,14 @@ export const ShoppingCartProvider = ({ children }) => {
     }
   };
 
-  const handleSignOut = () => {
-    // Clear user session
-    setIsUserAuthenticated(false);
-    setAccount(null);
+  const handleSignOut = async () => {
+    try {
+      await logoutUser();
+    } catch (error) {
+      console.error("Logout API failed:", error);
+    }
 
-    // Clear cart and orders
-    setCartProducts([]);
-    setCount(0);
-
-    // Clear localStorage
-    localStorage.setItem("isUserAuthenticated", "false");
-    localStorage.removeItem("pendingCart");
+    clearSession();
 
     // Close any open modals
     closeProductDetail();
@@ -258,13 +288,25 @@ export const ShoppingCartProvider = ({ children }) => {
   };
 
   const removeFromCart = (id) => {
-    setCartProducts((prev) => prev.filter((product) => product.id !== id));
-    setCount((prev) => prev - 1);
+    setCartProducts((prev) => {
+      const next = prev.filter((product) => {
+        const productId = product?._id || product?.id;
+        return productId !== id;
+      });
+      setCount(next.length);
+      return next;
+    });
   };
 
   const addToWishlist = (product) => {
     setWishlistItems((prev) => {
-      if (prev.some((item) => item.id === product.id)) {
+      const productId = product?._id || product?.id;
+      if (
+        prev.some((item) => {
+          const itemId = item?._id || item?.id;
+          return itemId === productId;
+        })
+      ) {
         return prev;
       }
       return [...prev, product];
@@ -272,15 +314,24 @@ export const ShoppingCartProvider = ({ children }) => {
   };
 
   const removeFromWishlist = (id) => {
-    setWishlistItems((prev) => prev.filter((product) => product.id !== id));
+    setWishlistItems((prev) =>
+      prev.filter((product) => {
+        const productId = product?._id || product?.id;
+        return productId !== id;
+      }),
+    );
   };
 
   const isInWishlist = (id) =>
-    wishlistItems.some((product) => product.id === id);
+    wishlistItems.some((product) => {
+      const productId = product?._id || product?.id;
+      return productId === id;
+    });
 
   const toggleWishlist = (product) => {
-    if (isInWishlist(product.id)) {
-      removeFromWishlist(product.id);
+    const productId = product?._id || product?.id;
+    if (isInWishlist(productId)) {
+      removeFromWishlist(productId);
     } else {
       addToWishlist(product);
     }

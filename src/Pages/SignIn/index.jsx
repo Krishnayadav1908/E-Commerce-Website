@@ -15,7 +15,8 @@ function SignIn() {
     e.preventDefault();
     const result = await context.handleSignIn(email, password);
     if (result?.success) {
-      navigate("/");
+      const nextRoute = result?.user?.role === "admin" ? "/admin" : "/";
+      navigate(nextRoute);
     } else {
       setError(result?.message || "Invalid credentials");
     }

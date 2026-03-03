@@ -26,6 +26,16 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: null
     },
+    refreshTokenHash: {
+        type: String,
+        default: null,
+        select: false
+    },
+    refreshTokenExpiresAt: {
+        type: Date,
+        default: null,
+        select: false
+    },
     phone: {
         type: String,
         default: ''
@@ -38,6 +48,10 @@ const userSchema = new mongoose.Schema({
         country: { type: String, default: 'India' }
     }
 }, { timestamps: true });
+
+// Add indexes for faster queries
+userSchema.index({ role: 1 });
+userSchema.index({ createdAt: -1 });
 
 const User = mongoose.model('User', userSchema);
 

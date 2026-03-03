@@ -37,7 +37,8 @@ const AdminProducts = () => {
       setError("");
       const token = localStorage.getItem("token");
       const response = await getAdminProducts(token);
-      setProducts(response.data || []);
+      // Handle pagination response structure
+      setProducts(response.data?.products || response.data || []);
     } catch (err) {
       setError("Unable to load products.");
     } finally {

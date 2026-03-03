@@ -13,6 +13,11 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Add indexes for faster queries
+productSchema.index({ title: 'text', category: 1, price: 1 });
+productSchema.index({ category: 1 });
+productSchema.index({ price: 1 });
+
 const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;

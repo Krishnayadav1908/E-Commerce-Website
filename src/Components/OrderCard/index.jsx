@@ -46,6 +46,10 @@ const OrderCard = (props) => {
               className="w-full h-full rounded-lg object-cover"
               src={imageUrl}
               alt={title}
+              loading="lazy"
+              decoding="async"
+              width={80}
+              height={80}
               onError={handleImageError}
             />
           ) : (

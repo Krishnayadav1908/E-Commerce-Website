@@ -84,7 +84,7 @@ const Card = ({ data }) => {
           className="absolute top-3 left-3 flex items-center justify-center w-9 h-9 rounded-full bg-white/90 text-teal-700 hover:scale-110 hover:bg-white transition-all duration-300 shadow-lg"
           onClick={(event) => toggleWishlist(event, data)}
         >
-          {context.isInWishlist(data.id) ? (
+          {context.isInWishlist(data._id || data.id) ? (
             <HeartIconSolid className="h-5 w-5" />
           ) : (
             <HeartIconOutline className="h-5 w-5" />

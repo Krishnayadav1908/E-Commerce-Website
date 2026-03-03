@@ -39,6 +39,14 @@ const ProductDetail = () => {
             className="w-full h-64 object-cover"
             src={product?.image}
             alt={product?.title}
+            loading="lazy"
+            decoding="async"
+            width={420}
+            height={256}
+            onError={(e) => {
+              e.target.style.display = "none";
+              e.target.parentElement.style.backgroundColor = "#e5e7eb";
+            }}
           />
           <span className="absolute top-3 left-3 bg-gradient-to-r from-teal-600 to-teal-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
             {product?.category}

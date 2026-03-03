@@ -12,7 +12,7 @@ const authLimiter = rateLimit({
 	message: { message: 'Too many requests. Please try again later.' }
 });
 
-router.use(['/register', '/login', '/verify-otp', '/resend-otp'], authLimiter);
+router.use(['/register', '/login', '/verify-otp', '/resend-otp', '/refresh'], authLimiter);
 
 // Register route   
 router.post('/register', authController.register);
@@ -25,6 +25,12 @@ router.post('/verify-otp', authController.verifyOtp);
 
 // Resend email OTP
 router.post('/resend-otp', authController.resendOtp);
+
+// Refresh access token using refresh token
+router.post('/refresh', authController.refresh);
+
+// Logout current session
+router.post('/logout', authController.logout);
 
 // User profile route (protected)
 router.get('/profile', authMiddleware, authController.profile);

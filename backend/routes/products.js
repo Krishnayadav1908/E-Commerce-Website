@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/productModel');
 
+const escapeRegex = (value = '') => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 // GET /api/products - fetch products with pagination and filters
 router.get('/', async (req, res) => {
   try {
@@ -17,7 +19,7 @@ router.get('/', async (req, res) => {
       filter.title = { $regex: search, $options: 'i' };
     }
     if (category) {
-      filter.category = { $regex: `^${category}$`, $options: 'i' };
+      filter.category = { $regex: `^${escapeRegex(category)}$`, $options: 'i' };
     }
     if (minPrice !== null || maxPrice !== null) {
       filter.price = {};
@@ -34,9 +36,21 @@ router.get('/', async (req, res) => {
 
     const skip = (page - 1) * limit;
     const [items, total] = await Promise.all([
-      Product.find(filter).sort({ id: 1 }).skip(skip).limit(limit),
+      Product.find(filter)
+        .select('id title price category image stock')
+        .sort({ id: 1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
       Product.countDocuments(filter)
     ]);
+
+    // Add caching headers for static product lists
+    if (!search && page <= 2) {
+      res.set('Cache-Control', 'public, max-age=300'); // 5 minutes cache for first pages
+    } else {
+      res.set('Cache-Control', 'private, max-age=60'); // 1 minute cache for filtered results
+    }
 
     res.json({
       items,

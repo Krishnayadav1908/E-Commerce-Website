@@ -18,7 +18,8 @@ const AdminUsers = () => {
         setError("");
         const token = localStorage.getItem("token");
         const response = await getAdminUsers(token);
-        setUsers(response.data || []);
+        // Handle pagination response structure
+        setUsers(response.data?.users || response.data || []);
       } catch (err) {
         setError("Unable to load users.");
       } finally {

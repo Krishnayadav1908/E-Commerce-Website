@@ -22,4 +22,10 @@ const emailLogSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Add indexes for faster queries
+emailLogSchema.index({ to: 1, status: 1 });
+emailLogSchema.index({ createdAt: -1 });
+emailLogSchema.index({ status: 1 });
+emailLogSchema.index({ type: 1 });
+
 module.exports = mongoose.model('EmailLog', emailLogSchema);

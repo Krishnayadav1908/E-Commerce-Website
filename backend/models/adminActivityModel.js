@@ -11,4 +11,9 @@ const adminActivitySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Add indexes for faster queries
+adminActivitySchema.index({ actor: 1, createdAt: -1 });
+adminActivitySchema.index({ targetType: 1 });
+adminActivitySchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model('AdminActivity', adminActivitySchema);

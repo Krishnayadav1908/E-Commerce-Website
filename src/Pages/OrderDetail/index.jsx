@@ -156,7 +156,15 @@ function OrderDetail() {
                 <img
                   src={product.image || product.images}
                   alt={product.title}
+                  loading="lazy"
+                  decoding="async"
+                  width={48}
+                  height={48}
                   className="w-12 h-12 object-cover rounded"
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                    e.target.parentElement.style.backgroundColor = "#e5e7eb";
+                  }}
                 />
                 <div className="flex-1">
                   <div className="font-medium">{product.title}</div>

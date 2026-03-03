@@ -28,7 +28,7 @@ function Home() {
       "/clothes": "clothes",
       "/electronics": "electronics",
       "/furnitures": "furniture",
-      "/toys": "toy",
+      "/toys": "toys",
       "/others": "others",
     };
     const nextCategory = categoryMap[path] || null;

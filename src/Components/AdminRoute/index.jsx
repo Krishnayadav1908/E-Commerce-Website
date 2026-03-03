@@ -5,12 +5,13 @@ import { ShoppingCartContext } from "../../Context";
 const AdminRoute = ({ children }) => {
   const { isUserAuthenticated, isLoading, account } =
     useContext(ShoppingCartContext);
+  const token = localStorage.getItem("token");
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!isUserAuthenticated) {
+  if (!isUserAuthenticated || !token || !account?._id) {
     return <Navigate to="/sign-in" replace />;
   }
 

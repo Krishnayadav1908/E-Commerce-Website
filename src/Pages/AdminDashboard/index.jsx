@@ -37,8 +37,9 @@ const AdminDashboard = () => {
         ]);
 
         setStats(statsRes.data);
-        setUsers(usersRes.data || []);
-        setProducts(productsRes.data || []);
+        // Handle pagination response structure
+        setUsers(usersRes.data?.users || usersRes.data || []);
+        setProducts(productsRes.data?.products || productsRes.data || []);
       } catch (err) {
         setError("Unable to load admin dashboard data.");
       } finally {

@@ -30,7 +30,8 @@ const AdminAudit = () => {
       setError("");
       const token = localStorage.getItem("token");
       const response = await getAdminAuditLogs(token, 100);
-      setLogs(response.data || []);
+      // Handle pagination response structure
+      setLogs(response.data?.logs || response.data || []);
     } catch (err) {
       setError("Unable to load audit logs.");
     } finally {
@@ -44,7 +45,8 @@ const AdminAudit = () => {
       setEmailError("");
       const token = localStorage.getItem("token");
       const response = await getEmailLogs(token, 100);
-      setEmailLogs(response.data || []);
+      // Handle pagination response structure
+      setEmailLogs(response.data?.logs || response.data || []);
     } catch (err) {
       setEmailError("Unable to load email logs.");
     } finally {

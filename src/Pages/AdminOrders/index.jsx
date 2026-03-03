@@ -23,7 +23,8 @@ const AdminOrders = () => {
         setError("");
         const token = localStorage.getItem("token");
         const response = await getAdminOrders(token);
-        setOrders(response.data || []);
+        // Handle pagination response structure
+        setOrders(response.data?.orders || response.data || []);
       } catch (err) {
         setError("Unable to load orders.");
       } finally {

@@ -5,7 +5,7 @@ const Sentry = require('@sentry/node');
 const path = require('path');
 
 require('dotenv').config({ path: path.join(__dirname, '.env') });
-require('./connection');
+require('./connection.js');
 
 const app = express();
 
@@ -28,7 +28,10 @@ if (isValidSentryDsn) {
 }
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

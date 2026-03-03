@@ -11,7 +11,11 @@ exports.profile = async (req, res) => {
 const User = require('../models/userModels');
 const EmailOtp = require('../models/emailOtpModel');
 const bcrypt = require('bcrypt');
-const generateToken = require('../utils/jwt');
+const {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} = require('../utils/jwt');
 const { sendEmail } = require('../utils/email');
 const { isValidEmail, validatePassword } = require('../utils/validation');
 
@@ -19,6 +23,56 @@ const OTP_EXPIRY_MINUTES = 10;
 const OTP_MAX_ATTEMPTS = 5;
 const OTP_RESEND_COOLDOWN_SECONDS = Number(process.env.OTP_RESEND_COOLDOWN_SECONDS || 60);
 const OTP_LOCKOUT_MINUTES = Number(process.env.OTP_LOCKOUT_MINUTES || 15);
+const REFRESH_TOKEN_COOKIE_NAME = 'refreshToken';
+const REFRESH_TOKEN_MAX_AGE_MS = Number(process.env.REFRESH_TOKEN_MAX_AGE_MS || 7 * 24 * 60 * 60 * 1000);
+
+const parseCookies = (cookieHeader = '') => {
+  return cookieHeader
+    .split(';')
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .reduce((acc, item) => {
+      const separatorIndex = item.indexOf('=');
+      if (separatorIndex <= 0) return acc;
+      const key = item.slice(0, separatorIndex);
+      const value = decodeURIComponent(item.slice(separatorIndex + 1));
+      acc[key] = value;
+      return acc;
+    }, {});
+};
+
+const setRefreshTokenCookie = (res, refreshToken) => {
+  res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: REFRESH_TOKEN_MAX_AGE_MS,
+    path: '/api/auth',
+  });
+};
+
+const clearRefreshTokenCookie = (res) => {
+  res.clearCookie(REFRESH_TOKEN_COOKIE_NAME, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/api/auth',
+  });
+};
+
+const persistRefreshTokenForUser = async (user, refreshToken) => {
+  user.refreshTokenHash = await bcrypt.hash(refreshToken, 10);
+  user.refreshTokenExpiresAt = new Date(Date.now() + REFRESH_TOKEN_MAX_AGE_MS);
+  await user.save();
+};
+
+const issueSessionTokens = async (user, res) => {
+  const token = generateAccessToken(user._id);
+  const refreshToken = generateRefreshToken(user._id);
+  await persistRefreshTokenForUser(user, refreshToken);
+  setRefreshTokenCookie(res, refreshToken);
+  return { token };
+};
 
 const generateOtp = () => String(Math.floor(100000 + Math.random() * 900000));
 
@@ -139,7 +193,7 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid username or password' });
 
-    const token = generateToken(user._id);
+    const { token } = await issueSessionTokens(user, res);
     res.json({ message: 'User logged in successfully', token });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -205,10 +259,81 @@ exports.verifyOtp = async (req, res) => {
     user.verifiedAt = new Date();
     await user.save();
 
-    const token = generateToken(user._id);
+    const { token } = await issueSessionTokens(user, res);
     res.json({ message: 'Email verified', token });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.refresh = async (req, res) => {
+  try {
+    const cookies = parseCookies(req.headers.cookie || '');
+    const refreshToken = cookies[REFRESH_TOKEN_COOKIE_NAME] || req.body?.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: 'Refresh token missing' });
+    }
+
+    let decoded;
+    try {
+      decoded = verifyRefreshToken(refreshToken);
+    } catch (_error) {
+      return res.status(401).json({ message: 'Invalid refresh token' });
+    }
+
+    const user = await User.findById(decoded.userId).select('+refreshTokenHash +refreshTokenExpiresAt');
+    if (!user || !user.refreshTokenHash || !user.refreshTokenExpiresAt) {
+      return res.status(401).json({ message: 'Session not found' });
+    }
+
+    if (user.refreshTokenExpiresAt < new Date()) {
+      user.refreshTokenHash = null;
+      user.refreshTokenExpiresAt = null;
+      await user.save();
+      clearRefreshTokenCookie(res);
+      return res.status(401).json({ message: 'Refresh token expired' });
+    }
+
+    const isRefreshTokenMatch = await bcrypt.compare(refreshToken, user.refreshTokenHash);
+    if (!isRefreshTokenMatch) {
+      user.refreshTokenHash = null;
+      user.refreshTokenExpiresAt = null;
+      await user.save();
+      clearRefreshTokenCookie(res);
+      return res.status(401).json({ message: 'Invalid refresh token' });
+    }
+
+    const { token } = await issueSessionTokens(user, res);
+    return res.json({ token });
+  } catch (_err) {
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.logout = async (req, res) => {
+  try {
+    const cookies = parseCookies(req.headers.cookie || '');
+    const refreshToken = cookies[REFRESH_TOKEN_COOKIE_NAME] || req.body?.refreshToken;
+
+    if (refreshToken) {
+      try {
+        const decoded = verifyRefreshToken(refreshToken);
+        const user = await User.findById(decoded.userId).select('+refreshTokenHash +refreshTokenExpiresAt');
+        if (user) {
+          user.refreshTokenHash = null;
+          user.refreshTokenExpiresAt = null;
+          await user.save();
+        }
+      } catch (_error) {
+      }
+    }
+
+    clearRefreshTokenCookie(res);
+    return res.json({ message: 'Logged out successfully' });
+  } catch (_err) {
+    clearRefreshTokenCookie(res);
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -329,7 +454,11 @@ exports.changePassword = async (req, res) => {
     }
 
     user.password = await bcrypt.hash(newPassword, 10);
+    user.refreshTokenHash = null;
+    user.refreshTokenExpiresAt = null;
     await user.save();
+
+    clearRefreshTokenCookie(res);
 
     res.json({ message: 'Password changed successfully' });
   } catch (err) {
