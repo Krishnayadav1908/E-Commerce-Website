@@ -37,7 +37,14 @@ const AppRoutes = () => {
     { path: "/others", element: <Home /> },
     { path: "/cart-summary", element: <CartSummary /> },
     { path: "/checkout", element: <CheckoutPage /> },
-    { path: "/performance", element: <Performance /> },
+    {
+      path: "/performance",
+      element: (
+        <AdminRoute>
+          <Performance />
+        </AdminRoute>
+      ),
+    },
     {
       path: "/admin",
       element: (

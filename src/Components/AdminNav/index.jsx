@@ -27,6 +27,9 @@ const AdminNav = () => {
         <NavLink to="/admin/audit" className={linkClass}>
           Audit Log
         </NavLink>
+        <NavLink to="/performance" className={linkClass}>
+          Performance
+        </NavLink>
       </div>
     </nav>
   );
