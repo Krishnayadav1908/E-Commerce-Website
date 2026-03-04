@@ -7,7 +7,6 @@ import OrderCard from "../OrderCard";
 import { totalPrice } from "../../utils";
 import { useToast } from "../Toast";
 import "./styles.css";
-// StripePayment removed
 
 const CheckoutSideMenu = () => {
   const context = useContext(ShoppingCartContext);
@@ -16,9 +15,9 @@ const CheckoutSideMenu = () => {
 
   const getItemKey = (product) => product?._id || product?.id;
 
-  const handleDelete = (id) => {
+  const handleDelete = (indexToRemove) => {
     context.setCartProducts((prev) => {
-      const next = prev.filter((product) => getItemKey(product) !== id);
+      const next = prev.filter((_, index) => index !== indexToRemove);
       context.setCount(next.length);
       return next;
     });
@@ -57,10 +56,10 @@ const CheckoutSideMenu = () => {
         </div>
         {/* Contenedor con scroll para productos */}
         <div className="flex-1 overflow-y-auto px-6">
-          {context.cartProducts.map((product) => (
+          {context.cartProducts.map((product, index) => (
             <OrderCard
-              key={getItemKey(product)}
-              id={getItemKey(product)}
+              key={`${getItemKey(product)}-${index}`}
+              id={index}
               title={product.title}
               imageUrl={product.image || product.images}
               price={product.price}

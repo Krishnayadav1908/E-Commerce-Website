@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, memo } from "react";
 import {
   PlusIcon,
   HeartIcon as HeartIconSolid,
@@ -113,4 +113,4 @@ const Card = ({ data }) => {
   );
 };
 
-export default Card;
+export default memo(Card);

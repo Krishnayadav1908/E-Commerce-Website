@@ -148,7 +148,7 @@ export const logoutUser = () =>
   authApi.post('/auth/logout', {}, { withCredentials: true })
 
 export const getProducts = (params) =>
-  authApi.get('/products', { params })
+  api.get('/', { params })
 
 export const getAdminStats = (token) =>
   authApi.get('/admin/stats', withAuth(token))

@@ -38,18 +38,22 @@ router.get('/', async (req, res) => {
     const [items, total] = await Promise.all([
       Product.find(filter)
         .select('id title price category image stock')
+        .hint({ id: 1 }) // Use id index for sorting
         .sort({ id: 1 })
         .skip(skip)
         .limit(limit)
-        .lean(),
+        .lean()
+        .exec(),
       Product.countDocuments(filter)
     ]);
 
     // Add caching headers for static product lists
     if (!search && page <= 2) {
-      res.set('Cache-Control', 'public, max-age=300'); // 5 minutes cache for first pages
+      res.set('Cache-Control', 'public, max-age=600'); // 10 minutes cache for first pages
+    } else if (!search) {
+      res.set('Cache-Control', 'public, max-age=300'); // 5 minutes for other pages
     } else {
-      res.set('Cache-Control', 'private, max-age=60'); // 1 minute cache for filtered results
+      res.set('Cache-Control', 'private, max-age=120'); // 2 minutes cache for filtered results
     }
 
     res.json({

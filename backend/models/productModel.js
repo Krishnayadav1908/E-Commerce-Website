@@ -15,6 +15,8 @@ const productSchema = new mongoose.Schema(
 
 // Add indexes for faster queries
 productSchema.index({ title: 'text', category: 1, price: 1 });
+productSchema.index({ category: 1, price: 1, id: 1 }); // Compound index for filtered queries
+productSchema.index({ id: 1 }); // For sorting
 productSchema.index({ category: 1 });
 productSchema.index({ price: 1 });
 
