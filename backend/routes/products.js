@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/productModel');
+const cache = require('../utils/cache');
 
 const escapeRegex = (value = '') => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -13,6 +14,17 @@ router.get('/', async (req, res) => {
     const category = String(req.query.category || '').trim();
     const minPrice = req.query.minPrice !== undefined ? Number(req.query.minPrice) : null;
     const maxPrice = req.query.maxPrice !== undefined ? Number(req.query.maxPrice) : null;
+
+    // Generate cache key based on filters
+    const cacheKey = `products:${page}:${limit}:${search}:${category}:${minPrice}:${maxPrice}`;
+    
+    // Try to get from cache
+    let cachedResult = cache.get(cacheKey);
+    if (cachedResult) {
+      res.set('X-Cache', 'HIT');
+      res.set('Cache-Control', 'public, max-age=600');
+      return res.json(cachedResult);
+    }
 
     const filter = {};
     if (search) {
@@ -47,7 +59,19 @@ router.get('/', async (req, res) => {
       Product.countDocuments(filter)
     ]);
 
-    // Add caching headers for static product lists
+    const result = {
+      items,
+      total,
+      page,
+      limit,
+      hasMore: skip + items.length < total
+    };
+
+    // Cache the result
+    const cacheDuration = search ? 2 * 60 * 1000 : 5 * 60 * 1000; // 2 min for search, 5 min for browsing
+    cache.set(cacheKey, result, cacheDuration);
+
+    // Add caching headers for HTTP caching (browser/CDN)
     if (!search && page <= 2) {
       res.set('Cache-Control', 'public, max-age=600'); // 10 minutes cache for first pages
     } else if (!search) {
@@ -55,14 +79,9 @@ router.get('/', async (req, res) => {
     } else {
       res.set('Cache-Control', 'private, max-age=120'); // 2 minutes cache for filtered results
     }
-
-    res.json({
-      items,
-      total,
-      page,
-      limit,
-      hasMore: skip + items.length < total
-    });
+    
+    res.set('X-Cache', 'MISS');
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -26,9 +26,12 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ error: 'Products array is required and cannot be empty' });
     }
 
-    // Check and deduct stock for each product
+    // Check and atomically deduct stock for each product
     for (const item of products) {
       const productRef = item._id || item.id;
+      const quantity = item.quantity || 1;
+
+      // First, get product details (non-atomic read for error messages)
       const product = item._id
         ? await Product.findById(item._id)
         : await Product.findOne({ id: item.id });
@@ -37,16 +40,23 @@ exports.createOrder = async (req, res) => {
         return res.status(404).json({ error: `Product ${productRef} not found` });
       }
 
-      const quantity = item.quantity || 1;
-      if (product.stock < quantity) {
+      // Atomically deduct stock only if sufficient stock exists
+      // This ensures no race condition: check and decrement happen in single DB operation
+      const updatedProduct = await Product.findOneAndUpdate(
+        { 
+          _id: product._id, 
+          stock: { $gte: quantity } // Condition: stock must be >= quantity
+        },
+        { $inc: { stock: -quantity } }, // Atomic decrement
+        { new: true } // Return updated document
+      );
+
+      if (!updatedProduct) {
+        // Stock was insufficient (either product doesn't exist or stock < quantity)
         return res.status(400).json({
           error: `Insufficient stock for ${product.title}. Available: ${product.stock}, Required: ${quantity}`
         });
       }
-
-      // Deduct stock
-      product.stock -= quantity;
-      await product.save();
     }
 
     const method = paymentMethod || 'upi';

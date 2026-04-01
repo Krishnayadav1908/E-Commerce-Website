@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 const Sentry = require('@sentry/node');
 const path = require('path');
+const { trackResponseTime } = require('./utils/performance');
 
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 require('./connection.js');
@@ -35,6 +36,9 @@ app.use(compression({
 }));
 
 app.use(helmet());
+
+// Track response times for performance monitoring
+app.use(trackResponseTime);
 
 // Dynamic CORS configuration
 const allowedOrigins = [
@@ -88,6 +92,15 @@ app.get('/api/health', (req, res) => {
     status: 'ok',
     timestamp: new Date().toISOString(),
     uptimeSeconds: Math.floor(process.uptime())
+  });
+});
+
+// Performance metrics endpoint (for monitoring)
+app.get('/api/metrics/performance', (req, res) => {
+  const { getStats, getRecentRequests } = require('./utils/performance');
+  res.json({
+    stats: getStats(),
+    recentRequests: getRecentRequests(10) // Last 10 requests
   });
 });
 

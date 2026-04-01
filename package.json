@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "server": "json-server --watch db.json --port 5001",
     "backend": "node backend/index.js",
-    "start": "concurrently \"npm run server\" \"npm run backend\" \"npm run dev\""
+    "start": "concurrently \"npm run server\" \"npm run backend\" \"npm run dev\"",
+    "load-test": "node backend/load-test.js http://localhost:3000 50 10"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
