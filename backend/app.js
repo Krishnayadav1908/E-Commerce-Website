@@ -120,4 +120,31 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Server error' });
 });
 
+// Serve static files from frontend dist (for production)
+const distPath = path.join(__dirname, '../dist');
+try {
+  const fs = require('fs');
+  if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath));
+  }
+} catch (err) {
+  console.log('Dist folder not found - skipping static file serving');
+}
+
+// SPA fallback - serve index.html for all non-API routes
+app.get(/^(?!\/api).*$/, (req, res) => {
+  const indexPath = path.join(__dirname, '../dist/index.html');
+  try {
+    const fs = require('fs');
+    if (fs.existsSync(indexPath)) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).json({ message: 'Application not found' });
+    }
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = app;
